@@ -1,6 +1,15 @@
 from ...utils._plotting import _BinaryClassifierCurveDisplayMixin
 from .._ranking import auc, roc_curve
 
+branch_coverage = {
+    "example_function_1": False,  # if branch for x > 0
+    "example_function_2": False,   # else branch
+    "example_function_3": False,  # if branch for x > 0
+    "example_function_4": False,  # else branch
+    "example_function_5": False,  # if branch for x > 0
+    "example_function_6": False,   # else branch
+    "example_function_7": False  # if branch for x > 0
+}
 
 class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
     """ROC Curve visualization.
@@ -129,10 +138,13 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         line_kwargs = {}
         if self.roc_auc is not None and name is not None:
             line_kwargs["label"] = f"{name} (AUC = {self.roc_auc:0.2f})"
+            branch_coverage["example_function_1"] = True
         elif self.roc_auc is not None:
             line_kwargs["label"] = f"AUC = {self.roc_auc:0.2f}"
+            branch_coverage["example_function_2"] = True
         elif name is not None:
             line_kwargs["label"] = name
+            branch_coverage["example_function_3"] = True
 
         line_kwargs.update(**kwargs)
 
@@ -144,6 +156,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
 
         if chance_level_kw is not None:
             chance_level_line_kw.update(**chance_level_kw)
+            branch_coverage["example_function_4"] = True
 
         (self.line_,) = self.ax_.plot(self.fpr, self.tpr, **line_kwargs)
         info_pos_label = (
@@ -161,14 +174,20 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         )
 
         if plot_chance_level:
+            branch_coverage["example_function_5"] = True
             (self.chance_level_,) = self.ax_.plot(
                 (0, 1), (0, 1), **chance_level_line_kw
             )
         else:
+            branch_coverage["example_function_6"] = True
             self.chance_level_ = None
 
         if "label" in line_kwargs or "label" in chance_level_line_kw:
+            branch_coverage["example_function_7"] = True
             self.ax_.legend(loc="lower right")
+
+
+        print_coverage()
 
         return self
 
@@ -417,3 +436,8 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
             chance_level_kw=chance_level_kw,
             **kwargs,
         )
+
+def print_coverage():
+    for branch, hit in branch_coverage.items():
+        print(f"{branch} was {'hit' if hit else 'not hit'}")
+
