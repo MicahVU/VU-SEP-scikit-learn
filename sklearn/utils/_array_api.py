@@ -10,32 +10,32 @@ import scipy.special as special
 from .._config import get_config
 from .fixes import parse_version
 
-branch_coverage = {
-    "example_function_1": False,  # if branch for x > 0
-    "example_function_2": False,   # else branch
-    "example_function_3": False,  # if branch for x > 0
-    "example_function_4": False,   # else branch
-    "example_function_5": False,  # if branch for x > 0
-    "example_function_6": False,   # else branch
-    "example_function_7": False,  # if branch for x > 0
-    "example_function_8": False,   # else branch
-    "example_function_9": False,  # if branch for x > 0
-    "example_function_10": False,   # else branch
-    "example_function_11": False,
-    "example_function_12": False
-}
+# branch_coverage = {
+#     "example_function_1": False,  # if branch for x > 0
+#     "example_function_2": False,   # else branch
+#     "example_function_3": False,  # if branch for x > 0
+#     "example_function_4": False,   # else branch
+#     "example_function_5": False,  # if branch for x > 0
+#     "example_function_6": False,   # else branch
+#     "example_function_7": False,  # if branch for x > 0
+#     "example_function_8": False,   # else branch
+#     "example_function_9": False,  # if branch for x > 0
+#     "example_function_10": False,   # else branch
+#     "example_function_11": False,
+#     "example_function_12": False
+# }
 
-def print_coverage():
-    branches_hit = 0
-    total_branches = 0
-    for branch, hit in branch_coverage.items():
-        total_branches = total_branches+1
-        if hit:
-            branches_hit = branches_hit + 1
-            print(f"{branch} was hit")
-        else:
-            print(f"{branch} was not hit")
-    print("total percentage of this test = " + str((branches_hit/total_branches)*100))
+# def print_coverage():
+#     branches_hit = 0
+#     total_branches = 0
+#     for branch, hit in branch_coverage.items():
+#         total_branches = total_branches+1
+#         if hit:
+#             branches_hit = branches_hit + 1
+#             print(f"{branch} was hit")
+#         else:
+#             print(f"{branch} was not hit")
+#     print("total percentage of this test = " + str((branches_hit/total_branches)*100))
 
 
 _NUMPY_NAMESPACE_NAMES = {"numpy", "array_api_compat.numpy"}
@@ -228,59 +228,59 @@ def isdtype(dtype, kind, *, xp):
 #HERE
 def _isdtype_single(dtype, kind, *, xp):
     if isinstance(kind, str):
-        branch_coverage["example_function_1"] = True
-        print_coverage()
+        # branch_coverage["example_function_1"] = True
+        # print_coverage()
         if kind == "bool":
-            branch_coverage["example_function_2"] = True
-            print_coverage()
+            # branch_coverage["example_function_2"] = True
+            # print_coverage()
             return dtype == xp.bool
         elif kind == "signed integer":
-            branch_coverage["example_function_3"] = True
-            print_coverage()
+            # branch_coverage["example_function_3"] = True
+            # print_coverage()
             return dtype in {xp.int8, xp.int16, xp.int32, xp.int64}
         elif kind == "unsigned integer":
-            branch_coverage["example_function_4"] = True
-            print_coverage()
+            # branch_coverage["example_function_4"] = True
+            # print_coverage()
             return dtype in {xp.uint8, xp.uint16, xp.uint32, xp.uint64}
         elif kind == "integral":
-            branch_coverage["example_function_5"] = True
-            print_coverage()
+            # branch_coverage["example_function_5"] = True
+            # print_coverage()
             return any(
                 _isdtype_single(dtype, k, xp=xp)
                 for k in ("signed integer", "unsigned integer")
             )
         elif kind == "real floating":
-            branch_coverage["example_function_6"] = True
-            print_coverage()
+            # branch_coverage["example_function_6"] = True
+            # print_coverage()
             return dtype in supported_float_dtypes(xp)
         elif kind == "complex floating":
-            branch_coverage["example_function_7"] = True
-            print_coverage()
+            # branch_coverage["example_function_7"] = True
+            # print_coverage()
             # Some name spaces do not have complex, such as cupy.array_api
             complex_dtypes = set()
             if hasattr(xp, "complex64"):
-                branch_coverage["example_function_8"] = True
-                print_coverage()
+                #branch_coverage["example_function_8"] = True
+                #print_coverage()
                 complex_dtypes.add(xp.complex64)
             if hasattr(xp, "complex128"):
-                branch_coverage["example_function_9"] = True
-                print_coverage()
+                #branch_coverage["example_function_9"] = True
+                #print_coverage()
                 complex_dtypes.add(xp.complex128)
             return dtype in complex_dtypes
         elif kind == "numeric":
-            branch_coverage["example_function_10"] = True
-            print_coverage()
+            #branch_coverage["example_function_10"] = True
+            #print_coverage()
             return any(
                 _isdtype_single(dtype, k, xp=xp)
                 for k in ("integral", "real floating", "complex floating")
             )
         else:
-            branch_coverage["example_function_11"] = True
-            print_coverage()
+            #branch_coverage["example_function_11"] = True
+            #print_coverage()
             raise ValueError(f"Unrecognized data type kind: {kind!r}")
     else:
-        branch_coverage["example_function_12"] = True
-        print_coverage()
+        #branch_coverage["example_function_12"] = True
+        #print_coverage()
         return dtype == kind
 
 

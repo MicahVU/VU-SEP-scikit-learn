@@ -438,14 +438,14 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         )
 
 
-def print_coverage():
-    branches_hit = 0
-    total_branches = 0
-    for branch, hit in branch_coverage.items():
-        total_branches = total_branches+1
-        if hit:
-            branches_hit = branches_hit + 1
-            print(f"{branch} was hit")
-        else:
-            print(f"{branch} was not hit")
-    print("total percentage of this test = " + str((branches_hit/total_branches)*100))
+# def print_coverage():
+#     branches_hit = 0
+#     total_branches = 0
+#     for branch, hit in branch_coverage.items():
+#         total_branches = total_branches+1
+#         if hit:
+#             branches_hit = branches_hit + 1
+#             print(f"{branch} was hit")
+#         else:
+#             print(f"{branch} was not hit")
+#     print("total percentage of this test = " + str((branches_hit/total_branches)*100))
