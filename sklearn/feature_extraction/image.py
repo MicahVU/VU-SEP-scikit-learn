@@ -4,7 +4,7 @@
 #          Gael Varoquaux <gael.varoquaux@normalesup.org>
 #          Olivier Grisel
 #          Vlad Niculae
-# License: BSD 3 clause
+# SPDX-License-Identifier: BSD-3-Clause
 
 from itertools import product
 from numbers import Integral, Number, Real
@@ -24,49 +24,6 @@ __all__ = [
     "img_to_graph",
     "reconstruct_from_patches_2d",
 ]
-
-branch_coverage = {
-    # "example_function_1": False,  # if branch for x > 0
-    # "example_function_2": False,   # else branch
-    # "example_function_3": False,  # if branch for x > 0
-    # "example_function_4": False,   # else branch
-    # "example_function_5": False,  # if branch for x >0
-    #"tograph1": False,  # if branch for x > 0
-    #"tograph2": False,   # else branch
-    #"tograph3": False,  # if branch for x > 0
-    #"tograph4": False,   # else branch
-    #"tograph5": False,  # if branch for x >0
-    #"tograph6": False,  # if branch for x > 0
-    #"tograph7": False,   # else branch
-    #"tograph8": False,  # if branch for x > 0
-    #"tograph9": False,   # else branch
-    #"tograph10": False,  # if branch for x >0
-    # "extract_patches_2d_1": False,
-    # "extract_patches_2d_2": False,
-    # "extract_patches_2d_3": False,
-    # "extract_patches_2d_4": False,
-    # "extract_patches_2d_5": False,
-    # "extract_patches_2d_6": False,
-    "compute_patches_1": False,
-    "compute_patches_2": False,
-    "compute_patches_3": False,
-    "compute_patches_4": False,
-    "compute_patches_5": False,
-    "compute_patches_6": False,
-
-    }
-
-def print_coverage():
-    branches_hit = 0
-    total_branches = 0
-    for branch, hit in branch_coverage.items():
-        total_branches = total_branches+1
-        if hit:
-            branches_hit = branches_hit + 1
-            print(f"{branch} was hit")
-        else:
-            print(f"{branch} was not hit")
-    print("total percentage of this test = " + str((branches_hit/total_branches)*100))
 
 ###############################################################################
 # From an image to a graph
@@ -111,7 +68,7 @@ def _compute_gradient_3d(edges, img):
 
 # XXX: Why mask the image after computing the weights?
 
-#BC_is_100%
+
 def _mask_edges_weights(mask, edges, weights=None):
     """Apply a mask to edges (weighted or not)"""
     inds = np.arange(mask.size)
@@ -119,27 +76,19 @@ def _mask_edges_weights(mask, edges, weights=None):
     ind_mask = np.logical_and(np.isin(edges[0], inds), np.isin(edges[1], inds))
     edges = edges[:, ind_mask]
     if weights is not None:
-        #branch_coverage["example_function_1"] = True
         weights = weights[ind_mask]
     if len(edges.ravel()):
-        #branch_coverage["example_function_2"] = True
         maxval = edges.max()
     else:
-        #branch_coverage["example_function_3"] = True
         maxval = 0
     order = np.searchsorted(np.flatnonzero(mask), np.arange(maxval + 1))
     edges = order[edges]
     if weights is None:
-        #branch_coverage["example_function_4"] = True
-        #print_coverage()
         return edges
     else:
-        #branch_coverage["example_function_5"] = True
-        #print_coverage()
         return edges, weights
 
 
-#BC_is_80%, need mask_edges_Weight to be enabled too
 def _to_graph(
     n_x, n_y, n_z, mask=None, img=None, return_as=sparse.coo_matrix, dtype=None
 ):
@@ -147,35 +96,26 @@ def _to_graph(
     edges = _make_edges_3d(n_x, n_y, n_z)
 
     if dtype is None:  # To not overwrite input dtype
-        #branch_coverage["tograph1"] = True
         if img is None:
-            #branch_coverage["tograph2"] = True
             dtype = int
         else:
-            #branch_coverage["tograph3"] = True
             dtype = img.dtype
 
     if img is not None:
-        #branch_coverage["tograph4"] = True
         img = np.atleast_3d(img)
         weights = _compute_gradient_3d(edges, img)
         if mask is not None:
-            #branch_coverage["tograph5"] = True
             edges, weights = _mask_edges_weights(mask, edges, weights)
             diag = img.squeeze()[mask]
         else:
-            #branch_coverage["tograph6"] = True
             diag = img.ravel()
         n_voxels = diag.size
     else:
-        #branch_coverage["tograph7"] = True
         if mask is not None:
-            #branch_coverage["tograph8"] = True
             mask = mask.astype(dtype=bool, copy=False)
             edges = _mask_edges_weights(mask, edges)
             n_voxels = np.sum(mask)
         else:
-            #branch_coverage["tograph9"] = True
             n_voxels = n_x * n_y * n_z
         weights = np.ones(edges.shape[1], dtype=dtype)
         diag = np.ones(n_voxels, dtype=dtype)
@@ -192,10 +132,7 @@ def _to_graph(
         dtype=dtype,
     )
     if return_as is np.ndarray:
-        #branch_coverage["tograph10"] = True
-        #print_coverage()
         return graph.toarray()
-    #print_coverage()
     return return_as(graph)
 
 
@@ -309,7 +246,7 @@ def grid_to_graph(
 ###############################################################################
 # From an image to a set of small image patches
 
-#this one 6: 0%, use for
+
 def _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=None):
     """Compute the number of patches that will be extracted in an image.
 
@@ -335,23 +272,15 @@ def _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=None):
     all_patches = n_h * n_w
 
     if max_patches:
-        #print("in max_patches")
-        #branch_coverage["compute_patches_1"] = True
         if isinstance(max_patches, (Integral)) and max_patches < all_patches:
-            #branch_coverage["compute_patches_2"] = True
             return max_patches
         elif isinstance(max_patches, (Integral)) and max_patches >= all_patches:
-            #branch_coverage["compute_patches_3"] = True
             return all_patches
         elif isinstance(max_patches, (Real)) and 0 < max_patches < 1:
-            #branch_coverage["compute_patches_4"] = True
             return int(max_patches * all_patches)
         else:
-            #branch_coverage["compute_patches_5"] = True
             raise ValueError("Invalid value for max_patches: %r" % max_patches)
     else:
-        #print("not in max patches")
-        #branch_coverage["compute_patches_6"] = True
         return all_patches
 
 
@@ -427,7 +356,6 @@ def _extract_patches(arr, patch_shape=8, extraction_step=1):
     },
     prefer_skip_nested_validation=True,
 )
-#this one 33.33333%
 def extract_patches_2d(image, patch_size, *, max_patches=None, random_state=None):
     """Reshape a 2D image into a collection of patches.
 
@@ -492,15 +420,11 @@ def extract_patches_2d(image, patch_size, *, max_patches=None, random_state=None
     p_h, p_w = patch_size
 
     if p_h > i_h:
-        # branch_coverage["extract_patches_2d_1"] = True
-        print_coverage()
         raise ValueError(
             "Height of the patch should be less than the height of the image."
         )
 
     if p_w > i_w:
-        # branch_coverage["extract_patches_2d_2"] = True
-        print_coverage()
         raise ValueError(
             "Width of the patch should be less than the width of the image."
         )
@@ -515,34 +439,25 @@ def extract_patches_2d(image, patch_size, *, max_patches=None, random_state=None
 
     n_patches = _compute_n_patches(i_h, i_w, p_h, p_w, max_patches)
     if max_patches:
-        # branch_coverage["extract_patches_2d_3"] = True
         rng = check_random_state(random_state)
         i_s = rng.randint(i_h - p_h + 1, size=n_patches)
         j_s = rng.randint(i_w - p_w + 1, size=n_patches)
         patches = extracted_patches[i_s, j_s, 0]
     else:
-        # branch_coverage["extract_patches_2d_4"] = True
         patches = extracted_patches
 
     patches = patches.reshape(-1, p_h, p_w, n_colors)
     # remove the color dimension if useless
     if patches.shape[-1] == 1:
-        # branch_coverage["extract_patches_2d_5"] = True
-        print_coverage()
         return patches.reshape((n_patches, p_h, p_w))
     else:
-        # branch_coverage["extract_patches_2d_6"] = True
-        print_coverage()
         return patches
-    print_coverage()
 
 
 @validate_params(
     {"patches": [np.ndarray], "image_size": [tuple, Hidden(list)]},
     prefer_skip_nested_validation=True,
 )
-
-#could be used for function
 def reconstruct_from_patches_2d(patches, image_size):
     """Reconstruct the image from all of its patches.
 
@@ -695,7 +610,7 @@ class PatchExtractor(TransformerMixin, BaseEstimator):
             Returns the instance itself.
         """
         return self
-    #must still be calculated, extract_patches_2d needs to be included
+
     def transform(self, X):
         """Transform the image samples in `X` into a matrix of patch data.
 
