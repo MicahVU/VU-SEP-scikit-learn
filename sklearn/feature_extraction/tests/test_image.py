@@ -207,6 +207,7 @@ def test_extract_patches_less_than_max_patches(downsampled_face):
 
 
 def test_reconstruct_patches_perfect(downsampled_face):
+    print("in test_image reconstructing from patches 2d")
     face = downsampled_face
     p_h, p_w = 16, 16
 

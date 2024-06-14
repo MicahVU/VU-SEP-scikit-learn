@@ -245,6 +245,14 @@ def pytest_collection_modifyitems(config, items):
             ]:
                 item.add_marker(skip_marker)
 
+@pytest.fixture(scope="function", autouse=True)
+def set_random_seed():
+    """Set a fixed random seed for all tests."""
+    seed = 42
+    np.random.seed(seed)
+    import random
+    random.seed(seed)
+
 
 @pytest.fixture(scope="function")
 def pyplot():
