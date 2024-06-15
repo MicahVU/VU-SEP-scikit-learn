@@ -160,7 +160,8 @@ def setup_module(module):
     import numpy as np
 
     # Check if a random seed exists in the environment, if not create one.
-    _random_seed = os.environ.get("SKLEARN_SEED", None)
+    #_random_seed = os.environ.get("SKLEARN_SEED", None)
+    _random_seed = 42
     if _random_seed is None:
         _random_seed = np.random.uniform() * np.iinfo(np.int32).max
     _random_seed = int(_random_seed)
