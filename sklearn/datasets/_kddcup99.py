@@ -47,6 +47,19 @@ ARCHIVE_10_PERCENT = RemoteFileMetadata(
 
 logger = logging.getLogger(__name__)
 
+# Initialize coverage tracking global variable
+branch_coverage = {
+    "fetch_kddcup99_subset_SA": False,
+    "fetch_kddcup99_subset_SF_http_smtp": False,
+    "fetch_kddcup99_subset_http": False,
+    "fetch_kddcup99_subset_smtp": False,
+    "fetch_kddcup99_shuffle": False,
+    "fetch_kddcup99_return_X_y": False,
+    "fetch_brute_kddcup99_available": False,
+    "fetch_brute_kddcup99_download_if_missing": False,
+    "fetch_brute_kddcup99_oserror": False,
+}
+
 
 @validate_params(
     {
@@ -76,100 +89,6 @@ def fetch_kddcup99(
     n_retries=3,
     delay=1.0,
 ):
-    """Load the kddcup99 dataset (classification).
-
-    Download it if necessary.
-
-    =================   ====================================
-    Classes                                               23
-    Samples total                                    4898431
-    Dimensionality                                        41
-    Features            discrete (int) or continuous (float)
-    =================   ====================================
-
-    Read more in the :ref:`User Guide <kddcup99_dataset>`.
-
-    .. versionadded:: 0.18
-
-    Parameters
-    ----------
-    subset : {'SA', 'SF', 'http', 'smtp'}, default=None
-        To return the corresponding classical subsets of kddcup 99.
-        If None, return the entire kddcup 99 dataset.
-
-    data_home : str or path-like, default=None
-        Specify another download and cache folder for the datasets. By default
-        all scikit-learn data is stored in '~/scikit_learn_data' subfolders.
-
-        .. versionadded:: 0.19
-
-    shuffle : bool, default=False
-        Whether to shuffle dataset.
-
-    random_state : int, RandomState instance or None, default=None
-        Determines random number generation for dataset shuffling and for
-        selection of abnormal samples if `subset='SA'`. Pass an int for
-        reproducible output across multiple function calls.
-        See :term:`Glossary <random_state>`.
-
-    percent10 : bool, default=True
-        Whether to load only 10 percent of the data.
-
-    download_if_missing : bool, default=True
-        If False, raise an OSError if the data is not locally available
-        instead of trying to download the data from the source site.
-
-    return_X_y : bool, default=False
-        If True, returns ``(data, target)`` instead of a Bunch object. See
-        below for more information about the `data` and `target` object.
-
-        .. versionadded:: 0.20
-
-    as_frame : bool, default=False
-        If `True`, returns a pandas Dataframe for the ``data`` and ``target``
-        objects in the `Bunch` returned object; `Bunch` return object will also
-        have a ``frame`` member.
-
-        .. versionadded:: 0.24
-
-    n_retries : int, default=3
-        Number of retries when HTTP errors are encountered.
-
-        .. versionadded:: 1.5
-
-    delay : float, default=1.0
-        Number of seconds between retries.
-
-        .. versionadded:: 1.5
-
-    Returns
-    -------
-    data : :class:`~sklearn.utils.Bunch`
-        Dictionary-like object, with the following attributes.
-
-        data : {ndarray, dataframe} of shape (494021, 41)
-            The data matrix to learn. If `as_frame=True`, `data` will be a
-            pandas DataFrame.
-        target : {ndarray, series} of shape (494021,)
-            The regression target for each sample. If `as_frame=True`, `target`
-            will be a pandas Series.
-        frame : dataframe of shape (494021, 42)
-            Only present when `as_frame=True`. Contains `data` and `target`.
-        DESCR : str
-            The full description of the dataset.
-        feature_names : list
-            The names of the dataset columns
-        target_names: list
-            The names of the target columns
-
-    (data, target) : tuple if ``return_X_y`` is True
-        A tuple of two ndarray. The first containing a 2D array of
-        shape (n_samples, n_features) with each row representing one
-        sample and each column representing the features. The second
-        ndarray of shape (n_samples,) containing the target samples.
-
-        .. versionadded:: 0.20
-    """
     data_home = get_data_home(data_home=data_home)
     kddcup99 = _fetch_brute_kddcup99(
         data_home=data_home,
@@ -185,6 +104,7 @@ def fetch_kddcup99(
     target_names = kddcup99.target_names
 
     if subset == "SA":
+        branch_coverage["fetch_kddcup99_subset_SA"] = True
         s = target == b"normal."
         t = np.logical_not(s)
         normal_samples = data[s, :]
@@ -193,7 +113,6 @@ def fetch_kddcup99(
         abnormal_targets = target[t]
 
         n_samples_abnormal = abnormal_samples.shape[0]
-        # selected abnormal samples:
         random_state = check_random_state(random_state)
         r = random_state.randint(0, n_samples_abnormal, 3377)
         abnormal_samples = abnormal_samples[r]
@@ -202,8 +121,8 @@ def fetch_kddcup99(
         data = np.r_[normal_samples, abnormal_samples]
         target = np.r_[normal_targets, abnormal_targets]
 
-    if subset == "SF" or subset == "http" or subset == "smtp":
-        # select all samples with positive logged_in attribute:
+    if subset in {"SF", "http", "smtp"}:
+        branch_coverage["fetch_kddcup99_subset_SF_http_smtp"] = True
         s = data[:, 11] == 1
         data = np.c_[data[s, :11], data[s, 12:]]
         feature_names = feature_names[:11] + feature_names[12:]
@@ -214,6 +133,7 @@ def fetch_kddcup99(
         data[:, 5] = np.log((data[:, 5] + 0.1).astype(float, copy=False))
 
         if subset == "http":
+            branch_coverage["fetch_kddcup99_subset_http"] = True
             s = data[:, 2] == b"http"
             data = data[s]
             target = target[s]
@@ -221,6 +141,7 @@ def fetch_kddcup99(
             feature_names = [feature_names[0], feature_names[4], feature_names[5]]
 
         if subset == "smtp":
+            branch_coverage["fetch_kddcup99_subset_smtp"] = True
             s = data[:, 2] == b"smtp"
             data = data[s]
             target = target[s]
@@ -237,6 +158,7 @@ def fetch_kddcup99(
             ]
 
     if shuffle:
+        branch_coverage["fetch_kddcup99_shuffle"] = True
         data, target = shuffle_method(data, target, random_state=random_state)
 
     fdescr = load_descr("kddcup99.rst")
@@ -248,6 +170,7 @@ def fetch_kddcup99(
         )
 
     if return_X_y:
+        branch_coverage["fetch_kddcup99_return_X_y"] = True
         return data, target
 
     return Bunch(
@@ -263,46 +186,6 @@ def fetch_kddcup99(
 def _fetch_brute_kddcup99(
     data_home=None, download_if_missing=True, percent10=True, n_retries=3, delay=1.0
 ):
-    """Load the kddcup99 dataset, downloading it if necessary.
-
-    Parameters
-    ----------
-    data_home : str, default=None
-        Specify another download and cache folder for the datasets. By default
-        all scikit-learn data is stored in '~/scikit_learn_data' subfolders.
-
-    download_if_missing : bool, default=True
-        If False, raise an OSError if the data is not locally available
-        instead of trying to download the data from the source site.
-
-    percent10 : bool, default=True
-        Whether to load only 10 percent of the data.
-
-    n_retries : int, default=3
-        Number of retries when HTTP errors are encountered.
-
-    delay : float, default=1.0
-        Number of seconds between retries.
-
-    Returns
-    -------
-    dataset : :class:`~sklearn.utils.Bunch`
-        Dictionary-like object, with the following attributes.
-
-        data : ndarray of shape (494021, 41)
-            Each row corresponds to the 41 features in the dataset.
-        target : ndarray of shape (494021,)
-            Each value corresponds to one of the 21 attack types or to the
-            label 'normal.'.
-        feature_names : list
-            The names of the dataset columns
-        target_names: list
-            The names of the target columns
-        DESCR : str
-            Description of the kddcup99 dataset.
-
-    """
-
     data_home = get_data_home(data_home=data_home)
     dir_suffix = "-py3"
 
@@ -367,16 +250,19 @@ def _fetch_brute_kddcup99(
     feature_names = column_names[:-1]
 
     if available:
+        branch_coverage["fetch_brute_kddcup99_available"] = True
         try:
             X = joblib.load(samples_path)
             y = joblib.load(targets_path)
         except Exception as e:
+            branch_coverage["fetch_brute_kddcup99_oserror"] = True
             raise OSError(
                 "The cache for fetch_kddcup99 is invalid, please delete "
                 f"{str(kddcup_dir)} and run the fetch_kddcup99 again"
             ) from e
 
     elif download_if_missing:
+        branch_coverage["fetch_brute_kddcup99_download_if_missing"] = True
         _mkdirp(kddcup_dir)
         logger.info("Downloading %s" % archive.url)
         _fetch_remote(archive, dirname=kddcup_dir, n_retries=n_retries, delay=delay)
@@ -398,13 +284,11 @@ def _fetch_brute_kddcup99(
 
         X = Xy[:, :-1]
         y = Xy[:, -1]
-        # XXX bug when compress!=0:
-        # (error: 'Incorrect data length while decompressing[...] the file
-        #  could be corrupted.')
 
         joblib.dump(X, samples_path, compress=0)
         joblib.dump(y, targets_path, compress=0)
     else:
+        branch_coverage["fetch_brute_kddcup99_oserror"] = True
         raise OSError("Data not found and `download_if_missing` is False")
 
     return Bunch(
@@ -424,3 +308,17 @@ def _mkdirp(d):
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
+
+
+def print_coverage():
+    total_branches = len(branch_coverage)
+    hit_branches = sum(hit for hit in branch_coverage.values())
+    coverage = (hit_branches / total_branches) * 100
+    print(f"Branch Coverage: {coverage}%")
+    for branch, hit in branch_coverage.items():
+        print(f"{branch} was {'hit' if hit else 'not hit'}")
+
+
+if __name__ == "__main__":
+    # Run your tests here and then print coverage
+    print_coverage()
