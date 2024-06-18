@@ -1,11 +1,3 @@
-"""Test kddcup99 loader, if the data is available,
-or if specifically requested via environment variable
-(e.g. for CI jobs).
-
-Only 'percent10' mode is tested, as the full data
-is too big to use in unit-testing.
-"""
-
 from functools import partial
 
 import pytest
@@ -39,9 +31,8 @@ def test_fetch_kddcup99_percent10(subset, n_samples, n_features, as_frame):
 def test_fetch_kddcup99_return_X_y():
     fetch_func = partial(fetch_kddcup99, subset="smtp")
     data, target = fetch_func(return_X_y=True)
-    assert data.shape[1] == 3  # Update this line to reflect the correct number of features for smtp subset
+    assert data.shape[1] == 3  
     assert target.shape[0] == data.shape[0]
-
 
 def test_fetch_kddcup99_as_frame():
     bunch = fetch_kddcup99(as_frame=True)
@@ -68,6 +59,11 @@ def test_fetch_kddcup99_shuffle():
 
 
 def test_fetch_kddcup99_download_if_missing():
+    #cover the case where dataset is not available locally 
+
+    #patch so we can simulate their behavior in a controlled env 
+    #functions work correctly without the need for network calls 
+
     with patch("sklearn.datasets._kddcup99.exists", return_value=False), \
          patch("sklearn.datasets._kddcup99._fetch_remote"), \
          patch("sklearn.datasets._kddcup99.joblib.load", return_value=(MagicMock(), MagicMock())), \
@@ -77,7 +73,7 @@ def test_fetch_kddcup99_download_if_missing():
          patch("sklearn.datasets._kddcup99.join", return_value="/tmp/scikit_learn_data/kddcup99_10-py3/kddcup99_10_data"), \
          patch("builtins.open", new_callable=MagicMock):
         
-        # Mock the data to be returned by GzipFile
+        #mock  data to be returned by GzipFile
         mock_gzipfile.return_value.__enter__.return_value.readlines.return_value = [
             b"0,tcp,http,SF,181,5450,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,511,511,0.00,0.00,0.00,0.00,0.00,0.00,0,0,1.00,0.00,0.00,0.00,0.00,0.00,normal.\n"
         ]
@@ -90,15 +86,13 @@ def test_fetch_kddcup99_download_if_missing():
         )
         assert kddcup99.data.shape[0] > 0
 
-
 def test_pandas_dependency_message():
-    # Assuming `hide_available_pandas` is a fixture that hides pandas
     pass
-
 
 def test_corrupted_file_error_message(tmp_path):
     """Check that a nice error message is raised when cache is corrupted."""
-    kddcup99_dir = tmp_path / "kddcup99_10-py3"
+    kddcup99_dir = tmp_path / "kddcup99_10-py3" 
+    #create a temporary directory to simulate the cache location and put corrupted data to it
     kddcup99_dir.mkdir()
     samples_path = kddcup99_dir / "samples"
 
@@ -109,10 +103,9 @@ def test_corrupted_file_error_message(tmp_path):
         "The cache for fetch_kddcup99 is invalid, please "
         f"delete {str(kddcup99_dir)} and run the fetch_kddcup99 again"
     )
-    
+    #check if the error is there
     with pytest.raises(OSError, match=msg):
         fetch_kddcup99(data_home=str(tmp_path))
-
 
 if __name__ == "__main__":
     pytest.main()

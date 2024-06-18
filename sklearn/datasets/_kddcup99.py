@@ -14,10 +14,8 @@ import os
 from gzip import GzipFile
 from numbers import Integral, Real
 from os.path import exists, join
-
 import joblib
 import numpy as np
-
 from ..utils import Bunch, check_random_state
 from ..utils import shuffle as shuffle_method
 from ..utils._param_validation import Interval, StrOptions, validate_params
@@ -47,7 +45,7 @@ ARCHIVE_10_PERCENT = RemoteFileMetadata(
 
 logger = logging.getLogger(__name__)
 
-# Initialize coverage tracking global variable
+#keeping track of hits in branches.
 branch_coverage = {
     "fetch_kddcup99_subset_SA": False,
     "fetch_kddcup99_subset_SF_http_smtp": False,
@@ -320,5 +318,4 @@ def print_coverage():
 
 
 if __name__ == "__main__":
-    # Run your tests here and then print coverage
     print_coverage()
