@@ -29,121 +29,22 @@ Python, coverage.py (pytest)
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements 
 if available:
-        branch_coverage["fetch_brute_kddcup99_available"] = True
-        try:
-            X = joblib.load(samples_path)
-            y = joblib.load(targets_path)
-        except Exception as e:
-            branch_coverage["fetch_brute_kddcup99_oserror"] = True
-            raise OSError(
-                "The cache for fetch_kddcup99 is invalid, please delete "
-                f"{str(kddcup_dir)} and run the fetch_kddcup99 again"
-            ) from e
+(https://github.com/MicahVU/VU-SEP-scikit-learn/commit/c783cbcf466b43095be9945aa2496a4387b6042e#diff-6020384f05da59b3ef5b9078a33ceca19b61f65b7b18806c9b91587fd22594e0)>
 
-    elif download_if_missing:
-        branch_coverage["fetch_brute_kddcup99_download_if_missing"] = True
-        _mkdirp(kddcup_dir)
-        logger.info("Downloading %s" % archive.url)
-        _fetch_remote(archive, dirname=kddcup_dir, n_retries=n_retries, delay=delay)
-        DT = np.dtype(dt)
-        logger.debug("extracting archive")
-        archive_path = join(kddcup_dir, archive.filename)
-        file_ = GzipFile(filename=archive_path, mode="r")
-        Xy = []
-        for line in file_.readlines():
-            line = line.decode()
-            Xy.append(line.replace("\n", "").split(","))
-        file_.close()
-        logger.debug("extraction done")
-        os.remove(archive_path)
-
-        Xy = np.asarray(Xy, dtype=object)
-        for j in range(42):
-            Xy[:, j] = Xy[:, j].astype(DT[j])
-
-        X = Xy[:, :-1]
-        y = Xy[:, -1]
-
-        joblib.dump(X, samples_path, compress=0)
-        joblib.dump(y, targets_path, compress=0)
-    else:
-        branch_coverage["fetch_brute_kddcup99_oserror"] = True
-        raise OSError("Data not found and `download_if_missing` is False") >
-
-<Provide a screenshot of the coverage results output by the instrumentation >
+<Provide a screenshot of the coverage results output by the instrumentation 
+ (https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_of_functions_before_instrumentation.jpg) >
 
 <Function 2 name : _fetch_kddcup99>
 
-<Provide the same kind of information provided for Function 1
-if subset == "SA":
-        branch_coverage["fetch_kddcup99_subset_SA"] = True
-        s = target == b"normal."
-        t = np.logical_not(s)
-        normal_samples = data[s, :]
-        normal_targets = target[s]
-        abnormal_samples = data[t, :]
-        abnormal_targets = target[t]
+<Provide the same kind of information provided for Function 1 
 
-        n_samples_abnormal = abnormal_samples.shape[0]
-        random_state = check_random_state(random_state)
-        r = random_state.randint(0, n_samples_abnormal, 3377)
-        abnormal_samples = abnormal_samples[r]
-        abnormal_targets = abnormal_targets[r]
+these are the same links as above since both functions were done in the same commit 
 
-        data = np.r_[normal_samples, abnormal_samples]
-        target = np.r_[normal_targets, abnormal_targets]
+(https://github.com/MicahVU/VU-SEP-scikit-learn/commit/c783cbcf466b43095be9945aa2496a4387b6042e#diff-6020384f05da59b3ef5b9078a33ceca19b61f65b7b18806c9b91587fd22594e0) 
 
-    if subset in {"SF", "http", "smtp"}:
-        branch_coverage["fetch_kddcup99_subset_SF_http_smtp"] = True
-        s = data[:, 11] == 1
-        data = np.c_[data[s, :11], data[s, 12:]]
-        feature_names = feature_names[:11] + feature_names[12:]
-        target = target[s]
 
-        data[:, 0] = np.log((data[:, 0] + 0.1).astype(float, copy=False))
-        data[:, 4] = np.log((data[:, 4] + 0.1).astype(float, copy=False))
-        data[:, 5] = np.log((data[:, 5] + 0.1).astype(float, copy=False))
-
-        if subset == "http":
-            branch_coverage["fetch_kddcup99_subset_http"] = True
-            s = data[:, 2] == b"http"
-            data = data[s]
-            target = target[s]
-            data = np.c_[data[:, 0], data[:, 4], data[:, 5]]
-            feature_names = [feature_names[0], feature_names[4], feature_names[5]]
-
-        if subset == "smtp":
-            branch_coverage["fetch_kddcup99_subset_smtp"] = True
-            s = data[:, 2] == b"smtp"
-            data = data[s]
-            target = target[s]
-            data = np.c_[data[:, 0], data[:, 4], data[:, 5]]
-            feature_names = [feature_names[0], feature_names[4], feature_names[5]]
-
-        if subset == "SF":
-            data = np.c_[data[:, 0], data[:, 2], data[:, 4], data[:, 5]]
-            feature_names = [
-                feature_names[0],
-                feature_names[2],
-                feature_names[4],
-                feature_names[5],
-            ]
-
-    if shuffle:
-        branch_coverage["fetch_kddcup99_shuffle"] = True
-        data, target = shuffle_method(data, target, random_state=random_state)
-
-    fdescr = load_descr("kddcup99.rst")
-
-    frame = None
-    if as_frame:
-        frame, data, target = _convert_data_dataframe(
-            "fetch_kddcup99", data, target, feature_names, target_names
-        )
-
-    if return_X_y:
-        branch_coverage["fetch_kddcup99_return_X_y"] = True
-        return data, target>
+(https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_of_functions_before_instrumentation.jpg)
+>
 
 <Team member 2: Yevgeniy Stadnyk>
 
@@ -193,15 +94,18 @@ if subset == "SA":
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test
 
-def test_fetch_kddcup99_download_if_missing():
-    with patch("sklearn.datasets._kddcup99.exists", return_value=False), \
+(https://github.com/MicahVU/VU-SEP-scikit-learn/commit/c783cbcf466b43095be9945aa2496a4387b6042e#diff-d75de98f144d7a70bd99b7359f0fa9420a0229ba6800d1d7624d5e2e2209babe)
          
 
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
+(https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_of_functions_before_instrumentation.jpg)
 
 <Provide a screenshot of the new coverage results>
+(https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_of_functions_after_instrumentation.jpg)
+(https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_of_test_file_after.jpg)
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved
+(number is in the second explanation)
 
 ==> The coverage has improved because now we cover the case where dataset is not available locally by setting the flag to false in the patch
 >
@@ -209,16 +113,11 @@ def test_fetch_kddcup99_download_if_missing():
 <Test 2>
 
 <Provide the same kind of information provided for Test 1
-
-patch("sklearn.datasets._kddcup99.GzipFile") as mock_gzipfile, \
-
-mock_gzipfile.return_value.__enter__.return_value.readlines.return_value = [
-            b"0,tcp,http,SF,181,5450,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,511,511,0.00,0.00,0.00,0.00,0.00,0.00,0,0,1.00,0.00,0.00,0.00,0.00,0.00,normal.\n"
-        ]
+The  links are exactly the same because the tests have been improved in the same commit
 >
 <State the coverage improvement with a number and elaborate on why the coverage is improved
 
-==> The coverage has improved because by mocking the data we ensure that all code paths are tested, since some code paths are rarely executed in normal usage and in this case the network calls prevent that
+==> The coverage has improved (26% -> 98%) because by mocking the data we ensure that all code paths are tested, since some code paths are rarely executed in normal usage and in this case the network calls prevent that
 >
 <Team member 2: Yevgeniy Stadnyk>
 
