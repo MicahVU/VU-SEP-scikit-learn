@@ -135,6 +135,7 @@ The  links are exactly the same because the tests have been improved in the same
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
 
+
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
 
 <Provide a screenshot of the new coverage results>

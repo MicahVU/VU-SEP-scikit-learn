@@ -22,9 +22,9 @@ test sets. The compressed dataset size is around 14 Mb compressed. Once
 uncompressed the train set is 52 MB and the test set is 34 MB.
 """
 
+
 # Copyright (c) 2011 Olivier Grisel <olivier.grisel@ensta.org>
 # License: BSD 3 clause
-
 import codecs
 import logging
 import os
@@ -53,6 +53,7 @@ from ._base import (
     load_descr,
 )
 
+
 logger = logging.getLogger(__name__)
 
 # The original data can be found at:
@@ -66,6 +67,7 @@ ARCHIVE = RemoteFileMetadata(
 CACHE_NAME = "20news-bydate.pkz"
 TRAIN_FOLDER = "20news-bydate-train"
 TEST_FOLDER = "20news-bydate-test"
+
 
 
 def _download_20newsgroups(target_dir, cache_path, n_retries, delay):
@@ -134,6 +136,44 @@ def strip_newsgroup_quoting(text):
     return "\n".join(good_lines)
 
 
+
+
+# branch_coverage = {
+#    "condition_inside_loop_true": False,
+#    "post_loop_condition_true": False,
+#    "post_loop_condition_false": False
+# }
+
+
+# branch_coverage = {
+#     "cache_exists": False,
+#     "cache_loaded_successfully": False,
+#     "cache_loading_failed": False,
+#     "cache_is_none": False,
+#     "download_if_missing": False,
+#     "download_not_missing": False,
+#     "subset_train_test": False,
+#     "subset_all": False,
+#     "remove_headers": False,
+#     "remove_footers": False,
+#     "remove_quotes": False,
+#     "categories_not_none": False,
+#     "shuffle_true": False,
+#     "return_X_y_true": False,
+# }
+
+
+# def print_coverage():
+#    total_branches = len(branch_coverage)
+#    hit_branches = sum(hit for hit in branch_coverage.values())
+#    coverage = (hit_branches / total_branches) * 100
+#    print(f"Branch Coverage: {coverage}%")
+#    for branch, hit in branch_coverage.items():
+#        print(f"{branch} was {'hit' if hit else 'not hit'}")
+
+
+
+
 def strip_newsgroup_footer(text):
     """
     Given text in "news" format, attempt to remove a signature block.
@@ -151,12 +191,21 @@ def strip_newsgroup_footer(text):
     for line_num in range(len(lines) - 1, -1, -1):
         line = lines[line_num]
         if line.strip().strip("-") == "":
-            break
+         #branch_coverage["condition_inside_loop_true"] = True
+         break
 
     if line_num > 0:
+        #branch_coverage["post_loop_condition_true"] = True
+        #print_coverage
         return "\n".join(lines[:line_num])
     else:
+        #branch_coverage["post_loop_condition_false"] = True
+        #print_coverage()
         return text
+
+    
+
+   
 
 
 @validate_params(
@@ -174,6 +223,10 @@ def strip_newsgroup_footer(text):
     },
     prefer_skip_nested_validation=True,
 )
+
+
+
+
 def fetch_20newsgroups(
     *,
     data_home=None,
@@ -303,19 +356,24 @@ def fetch_20newsgroups(
     twenty_home = os.path.join(data_home, "20news_home")
     cache = None
     if os.path.exists(cache_path):
+       # branch_coverage["cache_exists"] = True
         try:
             with open(cache_path, "rb") as f:
                 compressed_content = f.read()
             uncompressed_content = codecs.decode(compressed_content, "zlib_codec")
             cache = pickle.loads(uncompressed_content)
+            #branch_coverage["cache_loaded_successfully"] = True
         except Exception as e:
+            #branch_coverage["cache_loading_failed"] = True
             print(80 * "_")
             print("Cache loading failed")
             print(80 * "_")
             print(e)
 
     if cache is None:
+        #branch_coverage["cache_is_none"] = True
         if download_if_missing:
+            #branch_coverage["download_if_missing"] = True
             logger.info("Downloading 20news dataset. This may take a few minutes.")
             cache = _download_20newsgroups(
                 target_dir=twenty_home,
@@ -324,11 +382,16 @@ def fetch_20newsgroups(
                 delay=delay,
             )
         else:
+            #branch_coverage["download_not_missing"]=True
+            #print_coverage()
             raise OSError("20Newsgroups dataset not found")
+            
 
     if subset in ("train", "test"):
+        #branch_coverage["subset_train_test"] = True
         data = cache[subset]
     elif subset == "all":
+        #branch_coverage["subset_all"] = True
         data_lst = list()
         target = list()
         filenames = list()
@@ -347,13 +410,17 @@ def fetch_20newsgroups(
     data.DESCR = fdescr
 
     if "headers" in remove:
+        #branch_coverage["remove_headers"]=True
         data.data = [strip_newsgroup_header(text) for text in data.data]
     if "footers" in remove:
+        #branch_coverage["remove_footers"]=True
         data.data = [strip_newsgroup_footer(text) for text in data.data]
     if "quotes" in remove:
+        #branch_coverage["remove_quotes"] = True
         data.data = [strip_newsgroup_quoting(text) for text in data.data]
 
     if categories is not None:
+        #branch_coverage["categories_not_none"] = True
         labels = [(data.target_names.index(cat), cat) for cat in categories]
         # Sort the categories to have the ordering of the labels
         labels.sort()
@@ -370,6 +437,7 @@ def fetch_20newsgroups(
         data.data = data_lst.tolist()
 
     if shuffle:
+        #branch_coverage["shuffle_true"] = True
         random_state = check_random_state(random_state)
         indices = np.arange(data.target.shape[0])
         random_state.shuffle(indices)
@@ -381,9 +449,12 @@ def fetch_20newsgroups(
         data.data = data_lst.tolist()
 
     if return_X_y:
+        #branch_coverage["return_X_y_true"] = True
+        #print_coverage()
         return data.data, data.target
-
+    #print_coverage()
     return data
+
 
 
 @validate_params(
@@ -623,3 +694,5 @@ def fetch_20newsgroups_vectorized(
         feature_names=feature_names,
         DESCR=fdescr,
     )
+    
+    
