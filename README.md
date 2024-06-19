@@ -134,17 +134,30 @@ The  links are exactly the same because the tests have been improved in the same
 <Test 1>
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/a4e6e3b10caf0ee987c6b8681f92917b9dc93200
 
 
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/91106865e5c8d4682f7061341d98abfa5ccd0d04
 
 <Provide a screenshot of the new coverage results>
-
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/6b88943dcf073a01203bb9832e4ea4e745f34cad
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
-
+==> The coverage has improved (0% -> 100%) because in the original test file the function was not even called, therefore not tested. After retrieving the function and trying to find different inputs to check for the different branches. it was managed to get all 3 branches to be hit.
 <Test 2>
 
 <Provide the same kind of information provided for Test 1>
+==>The link for the commit made in the forked repository for the new/enhanced test is the same as for test 1 since it was done in the same commit.
+
+<Provide a screenshot of the old coverage results (the same as you already showed above)>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/1557c5e7e4b92293ea99c3fad231d9609d4cea1d
+
+<Provide a screenshot of the new coverage results>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/a6bd4f57d47f484b7c699f960ec932a4361c9efd
+
+==> The coverage has improved (0% -> 85.7%) because in the original test file there was a test created for the function fetch_20newsgroups, however
+it lacked data, it heavily got increased by patch decorators in unit tests. Like for example using side-effects to check for cache misses and other instances which allowed the test cases to hit more branches. 
+
 
 <Team member 3: Mikolaj Magiera>
 
