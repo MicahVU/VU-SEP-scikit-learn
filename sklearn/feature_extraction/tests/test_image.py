@@ -1,6 +1,5 @@
-# Authors: Emmanuelle Gouillart <emmanuelle.gouillart@normalesup.org>
-#          Gael Varoquaux <gael.varoquaux@normalesup.org>
-# License: BSD 3 clause
+# Authors: The scikit-learn developers
+# SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
 import pytest
@@ -14,7 +13,6 @@ from sklearn.feature_extraction.image import (
     grid_to_graph,
     img_to_graph,
     reconstruct_from_patches_2d,
-    _compute_n_patches,
 )
 
 
@@ -106,6 +104,7 @@ def test_connect_regions_with_grid(raccoon_face_fxt):
     graph = grid_to_graph(*face.shape, mask=mask, dtype=None)
     assert ndimage.label(mask)[1] == connected_components(graph)[0]
 
+
 @pytest.fixture
 def downsampled_face(raccoon_face_fxt):
     face = raccoon_face_fxt
@@ -141,7 +140,6 @@ def downsampled_face_collection(downsampled_face):
 
 
 def test_extract_patches_all(downsampled_face):
-    print("in test_extract_patches_all")
     face = downsampled_face
     i_h, i_w = face.shape
     p_h, p_w = 16, 16
@@ -151,7 +149,6 @@ def test_extract_patches_all(downsampled_face):
 
 
 def test_extract_patches_all_color(orange_face):
-    print("test_extarct_patches_all_color")
     face = orange_face
     i_h, i_w = face.shape[:2]
     p_h, p_w = 16, 16
@@ -161,7 +158,6 @@ def test_extract_patches_all_color(orange_face):
 
 
 def test_extract_patches_all_rect(downsampled_face):
-    print("test_extract_pathces_all_rect")
     face = downsampled_face
     face = face[:, 32:97]
     i_h, i_w = face.shape
@@ -191,7 +187,6 @@ def test_extract_patches_max_patches(downsampled_face):
 
 
 def test_extract_patch_same_size_image(downsampled_face):
-    print("test_extract_patches_same_size_image")
     face = downsampled_face
     # Request patches of the same size as image
     # Should return just the single patch a.k.a. the image
@@ -211,7 +206,6 @@ def test_extract_patches_less_than_max_patches(downsampled_face):
 
 
 def test_reconstruct_patches_perfect(downsampled_face):
-    print("test_reconstruct_patches_perfect")
     face = downsampled_face
     p_h, p_w = 16, 16
 
@@ -221,7 +215,6 @@ def test_reconstruct_patches_perfect(downsampled_face):
 
 
 def test_reconstruct_patches_perfect_color(orange_face):
-    print("test_reconstructz_patches_perfect_color")
     face = orange_face
     p_h, p_w = 16, 16
 
@@ -346,7 +339,6 @@ def test_extract_patches_square(downsampled_face):
 
 def test_width_patch():
     # width and height of the patch should be less than the image
-    print("test_width_patch, width and height of patch should be less than the image")
     x = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
     with pytest.raises(ValueError):
         extract_patches_2d(x, (4, 1))
@@ -361,64 +353,3 @@ def test_patch_extractor_wrong_input(orange_face):
     extractor = PatchExtractor(patch_size=(8, 8, 8))
     with pytest.raises(ValueError, match=err_msg):
         extractor.transform(faces)
-
-def test_micah():
-    print("in micah_test")
-    face = np.random.rand(64, 64)
-    i_h, i_w = face.shape
-    p_h, p_w = 16, 16
-    expected_n_patches = (i_h - p_h + 1) * (i_w - p_w + 1)
-    patches = extract_patches_2d(face, (p_h, p_w))
-    assert patches.shape == (expected_n_patches, p_h, p_w)
-
-
-def test_micah2():
-    print("in micah2_test")
-    face = np.random.rand(64,64,3)
-    i_h, i_w = face.shape[:2]  # Use only height and width for shape
-    p_h, p_w = 16, 16
-    expected_n_patches = (i_h - p_h + 1) * (i_w - p_w + 1)
-    patches = extract_patches_2d(face, (p_h, p_w))
-    assert patches.shape == (expected_n_patches, p_h, p_w, 3)  # Ensure patches have 3 channels
-
-def test_micah3():
-    print("in micah test 3")
-    arr = np.random.rand(64, 64)  # Create a 2D array
-    patch_shape = 8  # An integer
-    extraction_step = 1  # An integer
-    patches = _extract_patches(arr, patch_shape, extraction_step)
-
-
-def test_compute_n_patches_int_less_than_all():
-    _compute_n_patches(64, 64, 16, 16, max_patches=50) == 50
-
-def test_compute_n_patches_int_greater_than_or_equal_to_all():
-    _compute_n_patches(64, 64, 16, 16, max_patches=1000) == 49
-    i_h, i_w = 64, 64
-    p_h, p_w = 16, 16
-    all_patches = (i_h - p_h + 1) * (i_w - p_w + 1)
-    assert _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=all_patches) == all_patches
-    assert _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=all_patches + 1) == all_patches
-
-def test_compute_n_patches_float_between_0_and_1():
-    _compute_n_patches(64, 64, 16, 16, max_patches=0.5) == 24
-
-def test_compute_n_patches_invalid_value():
-    _compute_n_patches(64, 64, 16, 16, max_patches=-1)
-
-def test_compute_n_patches_none():
-    _compute_n_patches(64, 64, 16, 16, max_patches=None) == 49
-
-def test_compute_n_patches_slightly_above_max():
-     _compute_n_patches(64, 64, 16, 16, max_patches=50) == 50
-def test_compute_n_patches_int_greater_than_or_equal_to_all2():
-    _compute_n_patches(64,64,16,16,max_patches=50) == 49
-
-def test_compute_n_patches_slightly_below_min():
-    print("in slighly in below min")
-    i_h, i_w = 64, 64
-    p_h, p_w = 16, 16
-    with pytest.raises(ValueError):
-        _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=1.5) # Invalid float > 1
-
-

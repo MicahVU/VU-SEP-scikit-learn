@@ -4,7 +4,7 @@
 #          Gael Varoquaux <gael.varoquaux@normalesup.org>
 #          Olivier Grisel
 #          Vlad Niculae
-# SPDX-License-Identifier: BSD-3-Clause
+# License: BSD 3 clause
 
 from itertools import product
 from numbers import Integral, Number, Real
@@ -24,6 +24,23 @@ __all__ = [
     "img_to_graph",
     "reconstruct_from_patches_2d",
 ]
+
+branch_coverage = {
+    "isinstance1": False,
+    "isinstance2": False
+    }
+
+def print_coverage():
+    branches_hit = 0
+    total_branches = 0
+    for branch, hit in branch_coverage.items():
+        total_branches = total_branches+1
+        if hit:
+            branches_hit = branches_hit + 1
+            print(f"{branch} was hit")
+        else:
+            print(f"{branch} was not hit")
+    print("total percentage of this test = " + str((branches_hit/total_branches)*100))
 
 ###############################################################################
 # From an image to a graph
@@ -283,7 +300,7 @@ def _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=None):
     else:
         return all_patches
 
-
+#CHECK EXTRACT_PATCHES FOR GOOD IMPROVEMENT, 0% -> 100%
 def _extract_patches(arr, patch_shape=8, extraction_step=1):
     """Extracts patches of any n-dimensional array in place using strides.
 
@@ -323,8 +340,10 @@ def _extract_patches(arr, patch_shape=8, extraction_step=1):
     arr_ndim = arr.ndim
 
     if isinstance(patch_shape, Number):
+        branch_coverage["isinstance1"] = True
         patch_shape = tuple([patch_shape] * arr_ndim)
     if isinstance(extraction_step, Number):
+        branch_coverage["isinstance2"] = True
         extraction_step = tuple([extraction_step] * arr_ndim)
 
     patch_strides = arr.strides
@@ -340,6 +359,7 @@ def _extract_patches(arr, patch_shape=8, extraction_step=1):
     strides = tuple(list(indexing_strides) + list(patch_strides))
 
     patches = as_strided(arr, shape=shape, strides=strides)
+    print_coverage()
     return patches
 
 
@@ -356,6 +376,7 @@ def _extract_patches(arr, patch_shape=8, extraction_step=1):
     },
     prefer_skip_nested_validation=True,
 )
+
 def extract_patches_2d(image, patch_size, *, max_patches=None, random_state=None):
     """Reshape a 2D image into a collection of patches.
 
@@ -458,6 +479,8 @@ def extract_patches_2d(image, patch_size, *, max_patches=None, random_state=None
     {"patches": [np.ndarray], "image_size": [tuple, Hidden(list)]},
     prefer_skip_nested_validation=True,
 )
+
+
 def reconstruct_from_patches_2d(patches, image_size):
     """Reconstruct the image from all of its patches.
 
@@ -610,7 +633,7 @@ class PatchExtractor(TransformerMixin, BaseEstimator):
             Returns the instance itself.
         """
         return self
-
+    #must still be calculated, extract_patches_2d needs to be included
     def transform(self, X):
         """Transform the image samples in `X` into a matrix of patch data.
 
