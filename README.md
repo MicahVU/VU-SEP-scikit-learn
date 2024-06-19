@@ -27,20 +27,20 @@ Python, coverage.py (pytest)
 
 <Function 1 name : def _fetch_brute_kddcup99>
 
-<Show a patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements 
+<Show a patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements
 if available:
 (https://github.com/MicahVU/VU-SEP-scikit-learn/commit/c783cbcf466b43095be9945aa2496a4387b6042e#diff-6020384f05da59b3ef5b9078a33ceca19b61f65b7b18806c9b91587fd22594e0)>
 
-<Provide a screenshot of the coverage results output by the instrumentation 
+<Provide a screenshot of the coverage results output by the instrumentation
  (https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_of_functions_before_instrumentation.jpg) >
 
 <Function 2 name : _fetch_kddcup99>
 
-<Provide the same kind of information provided for Function 1 
+<Provide the same kind of information provided for Function 1
 
-these are the same links as above since both functions were done in the same commit 
+these are the same links as above since both functions were done in the same commit
 
-(https://github.com/MicahVU/VU-SEP-scikit-learn/commit/c783cbcf466b43095be9945aa2496a4387b6042e#diff-6020384f05da59b3ef5b9078a33ceca19b61f65b7b18806c9b91587fd22594e0) 
+(https://github.com/MicahVU/VU-SEP-scikit-learn/commit/c783cbcf466b43095be9945aa2496a4387b6042e#diff-6020384f05da59b3ef5b9078a33ceca19b61f65b7b18806c9b91587fd22594e0)
 
 
 (https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_of_functions_before_instrumentation.jpg)
@@ -73,14 +73,24 @@ these are the same links as above since both functions were done in the same com
 <Team member 4: Micah Rouwendaal>
 
 <Function 1 name>
+def _extract_patches(arr, patch_shape=8, extraction_step=1)
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/fc9299bc946944e9a6b505bad1cfa899ec25be24
 
 <Provide a screenshot of the coverage results output by the instrumentation>
+<img src="assignment1_images/branchcov_image_extract_patches.PNG">
 
 <Function 2 name>
+def _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=None)
 
 <Provide the same kind of information provided for Function 1>
+<Link to commit made in forked repository that shows the instrumented code to gather coverage measurements>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/0853288f57f631c83d082cbe57c952b0c63238aa
+
+<Provide a screenshot of the coverage results output by the instrumentation>
+<img src="assignment1_images/branchcov_image_compute_n_patches.PNG">
+
 
 ## Coverage improvement
 
@@ -95,7 +105,7 @@ these are the same links as above since both functions were done in the same com
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test
 
 (https://github.com/MicahVU/VU-SEP-scikit-learn/commit/c783cbcf466b43095be9945aa2496a4387b6042e#diff-d75de98f144d7a70bd99b7359f0fa9420a0229ba6800d1d7624d5e2e2209babe)
-         
+
 
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
 (https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_of_functions_before_instrumentation.jpg)
