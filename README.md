@@ -68,14 +68,23 @@ https://github.com/MicahVU/VU-SEP-scikit-learn/commit/1557c5e7e4b92293ea99c3fad2
 <Team member 3: Mikolaj Magiera>
 
 <Function 1 name>
+def fit(self, X, y, sample_weight=None) [in _quantile.py]
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/d7808859e292fd478ff90eab0a80b41925d21dc0
 
 <Provide a screenshot of the coverage results output by the instrumentation>
+<img src="assignment1_images/quantile before(50).png">
 
 <Function 2 name>
+def fit(self, X, y=None, sample_weight=None) [in _polynomial.py]
 
 <Provide the same kind of information provided for Function 1>
+<Link to commit made in forked repository that shows the instrumented code to gather coverage measurements>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/d64512c0831ed41b495706469d71045eaf14abc8
+
+<Provide a screenshot of the coverage results output by the instrumentation>
+<img src="assignment1_images/polynomial before(76.92).png">
 
 <Team member 4: Micah Rouwendaal>
 
@@ -174,16 +183,32 @@ it lacked data, it heavily got increased by patch decorators in unit tests. Like
 <Test 1>
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/45b6cc9d3af7e981f458b5f0600eba8db305112a
 
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
+<img src="assignment1_images/quantile before(50).png">
 
 <Provide a screenshot of the new coverage results>
+<img src="assignment1_images/quantile after(83.33).png">
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
+The coverage is improved from 50% to 83.33%, thus it clearly is an improvement. Most of the branches which were not reached before are now covered.
 
 <Test 2>
 
 <Provide the same kind of information provided for Test 1>
+<Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/94008110d4cb0ecb9a19d3be1e885f0ff13d4d1b
+
+<Provide a screenshot of the old coverage results (the same as you already showed above)>
+<img src="assignment1_images/polynomial before(76.92).png">
+
+<Provide a screenshot of the new coverage results>
+<img src="assignment1_images/polynomial after(92.31).png">
+
+<State the coverage improvement with a number and elaborate on why the coverage is improved>
+The coverage is improved from 76.92% to 92.31%, thus it clearly is an improvement. Most of the branches which were not reached before are now covered.
+
 
 <Team member 4: Micah Rouwendaal>
 
