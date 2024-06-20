@@ -255,4 +255,7 @@ For this function I needed to figure out what the if branches meant and what the
 
 <Write what each group member did>
 <Micah Rouwendaal, studentnumber: 2741567>
-Created the repository, started the project off. Looked for functions to improve, found some for himself and the team. Measured the branch coverage of everything with an existing tool, but also measured the branch coverage of 2 functions(extract_patches and _compute_n_patches in image.py) and improved the branch coverage of those functions. 
+Created the repository, started the project off. Looked for functions to improve, found some for himself and the team. Measured the branch coverage of everything with an existing tool, but also measured the branch coverage of 2 functions(extract_patches and _compute_n_patches in image.py) and improved the branch coverage of those functions.
+
+<Yevgeniy Stadnyk, studentnumber: 2727171>
+Finding out how to configure the branch coverage fwith the existing tool. Finding functions to improve. Measured branch coverage with own tool, for 2 functions strip_newsgroup_footer and fetch_20newsgroups. Improved the branch coverage of these functions.
