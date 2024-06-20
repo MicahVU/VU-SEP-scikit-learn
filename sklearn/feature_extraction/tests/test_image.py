@@ -383,3 +383,10 @@ def test_compute_n_patches_float_max_patches_bigger_than_1():
     p_h, p_w = 16, 16
     with pytest.raises(ValueError):
         _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=1.5)
+
+def test_extract_patches_is_instance_both():
+    array_to_extract = np.random.rand(64, 64)    #creates a random array
+    patch_shape = 8  # An integer
+    extraction_step = 1  # An integer
+    patches = _extract_patches(array_to_extract, patch_shape, extraction_step)
+    assert isinstance(patches, np.ndarray)
