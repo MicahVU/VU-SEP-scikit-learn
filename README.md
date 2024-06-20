@@ -259,3 +259,6 @@ Created the repository, started the project off. Looked for functions to improve
 
 <Yevgeniy Stadnyk, studentnumber: 2727171>
 Finding out how to configure the branch coverage fwith the existing tool. Finding functions to improve. Measured branch coverage with own tool, for 2 functions strip_newsgroup_footer and fetch_20newsgroups. Improved the branch coverage of these functions.
+
+<Stefanos Poullos, studentnumber: 2756510>
+Measured the branch coverage of everything with an existing tool, measure coverage of functions that I worked on with my own tool and improved those functions
