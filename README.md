@@ -51,12 +51,17 @@ these are the same links as above since both functions were done in the same com
 <Function 1 name>
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements>
-
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/a4e6e3b10caf0ee987c6b8681f92917b9dc93200
+==>in the datasets file i have the print coverage function and a few branch_coverage functions calculating for their respective functions, but I commented them out.
 <Provide a screenshot of the coverage results output by the instrumentation>
-
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/91106865e5c8d4682f7061341d98abfa5ccd0d04
 <Function 2 name>
 
 <Provide the same kind of information provided for Function 1>
+<Show a patch (diff) or a link to a commit made in your forked repository that shows the instrumented code to gather coverage measurements>
+The link is the same since I did the improvement of the tests and just the branch coverage in one big commit.
+<Provide a screenshot of the coverage results output by the instrumentation>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/1557c5e7e4b92293ea99c3fad231d9609d4cea1d
 
 <Team member 3: Mikolaj Magiera>
 
