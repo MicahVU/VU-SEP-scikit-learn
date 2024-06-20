@@ -199,6 +199,19 @@ The branch coverage went up from 0% -> 100%. Initially it did not have any cover
 
 <Provide the same kind of information provided for Test 1>
 
+<Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/c2bccda24e07074e104458075c1358f3ae06a5e1
+
+<Provide a screenshot of the old coverage results (the same as you already showed above)>
+<img src="assignment1_images/branchcov_image_extract_patches.PNG">
+
+<Provide a screenshot of the new coverage results>
+<img src="assignment1_images/branchcov_image_extract_patches_improvement.PNG">
+
+<State the coverage improvement with a number and elaborate on why the coverage is improved>
+The branch coverage went up from 0% -> 100%. Initially the function is called by other functions like extract_patches_2d, however the is_instance if branches never got hit. I added a test that makes the patches_shape and the extraction_step both integers, so that both the if statements will be hit and therefore resulting in a branch coverage of 100%.
+For this function I needed to figure out what the if branches meant and what the input parameters meant, after this I could easily add a test so that both if statements would be satisfied.
+
 ### Overall
 
 <Provide a screenshot of the old coverage results by running an existing tool (the same as you already showed above)>
