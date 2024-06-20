@@ -26,14 +26,14 @@ __all__ = [
 ]
 
 branch_coverage = {
-    #"isinstance1": False,
-    #"isinstance2": False,
-    "compute_patches_1": False,
-    "compute_patches_2": False,
-    "compute_patches_3": False,
-    "compute_patches_4": False,
-    "compute_patches_5": False,
-    "compute_patches_6": False,
+    "isinstance1": False,
+    "isinstance2": False,
+    #"compute_patches_1": False,
+    #"compute_patches_2": False,
+    #"compute_patches_3": False,
+    #"compute_patches_4": False,
+    #"compute_patches_5": False,
+    #"compute_patches_6": False,
     }
 
 def print_coverage():
@@ -296,26 +296,26 @@ def _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=None):
     all_patches = n_h * n_w
 
     if max_patches:
-        branch_coverage["compute_patches_1"] = True
+        #branch_coverage["compute_patches_1"] = True
         if isinstance(max_patches, (Integral)) and max_patches < all_patches:
-            branch_coverage["compute_patches_2"] = True
-            print_coverage()
+            #branch_coverage["compute_patches_2"] = True
+            #print_coverage()
             return max_patches
         elif isinstance(max_patches, (Integral)) and max_patches >= all_patches:
-            branch_coverage["compute_patches_3"] = True
-            print_coverage()
+            #branch_coverage["compute_patches_3"] = True
+            #print_coverage()
             return all_patches
         elif isinstance(max_patches, (Real)) and 0 < max_patches < 1:
-            branch_coverage["compute_patches_4"] = True
-            print_coverage()
+            #branch_coverage["compute_patches_4"] = True
+            #print_coverage()
             return int(max_patches * all_patches)
         else:
-            branch_coverage["compute_patches_5"] = True
-            print_coverage()
+            #branch_coverage["compute_patches_5"] = True
+            #print_coverage()
             raise ValueError("Invalid value for max_patches: %r" % max_patches)
     else:
-        branch_coverage["compute_patches_6"] = True
-        print_coverage()
+        #branch_coverage["compute_patches_6"] = True
+        #print_coverage()
         return all_patches
 
 
@@ -358,10 +358,10 @@ def _extract_patches(arr, patch_shape=8, extraction_step=1):
     arr_ndim = arr.ndim
 
     if isinstance(patch_shape, Number):
-        #branch_coverage["isinstance1"] = True
+        branch_coverage["isinstance1"] = True
         patch_shape = tuple([patch_shape] * arr_ndim)
     if isinstance(extraction_step, Number):
-        #branch_coverage["isinstance2"] = True
+        branch_coverage["isinstance2"] = True
         extraction_step = tuple([extraction_step] * arr_ndim)
 
     patch_strides = arr.strides
@@ -377,7 +377,7 @@ def _extract_patches(arr, patch_shape=8, extraction_step=1):
     strides = tuple(list(indexing_strides) + list(patch_strides))
 
     patches = as_strided(arr, shape=shape, strides=strides)
-    #print_coverage()
+    print_coverage()
     return patches
 
 

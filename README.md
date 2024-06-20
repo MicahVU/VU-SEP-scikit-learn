@@ -91,6 +91,8 @@ https://github.com/MicahVU/VU-SEP-scikit-learn/commit/0853288f57f631c83d082cbe57
 <Provide a screenshot of the coverage results output by the instrumentation>
 <img src="assignment1_images/branchcov_image_compute_n_patches.PNG">
 
+<Important: I commented out the branch_coverage flags of the other function in the second part, since otherwise these would also be counted as flags and thus resulting in a different branch coverage percentage.>
+
 
 ## Coverage improvement
 
@@ -156,7 +158,7 @@ https://github.com/MicahVU/VU-SEP-scikit-learn/commit/1557c5e7e4b92293ea99c3fad2
 https://github.com/MicahVU/VU-SEP-scikit-learn/commit/a6bd4f57d47f484b7c699f960ec932a4361c9efd
 
 ==> The coverage has improved (0% -> 85.7%) because in the original test file there was a test created for the function fetch_20newsgroups, however
-it lacked data, it heavily got increased by patch decorators in unit tests. Like for example using side-effects to check for cache misses and other instances which allowed the test cases to hit more branches. 
+it lacked data, it heavily got increased by patch decorators in unit tests. Like for example using side-effects to check for cache misses and other instances which allowed the test cases to hit more branches.
 
 
 <Team member 3: Mikolaj Magiera>
@@ -180,12 +182,18 @@ it lacked data, it heavily got increased by patch decorators in unit tests. Like
 <Test 1>
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/dd2976c00c728bdb80f7de9759b85214a324a7dd
 
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
+<img src="assignment1_images/branchcov_image_compute_n_patches.PNG">
 
 <Provide a screenshot of the new coverage results>
+<img src="assignment1_images/branchcov_image_compute_n_patches_improved.PNG">
+<img src="assignment1_images/branchcov_image_compute_n_patches_improved2.PNG">
+The last picture might be redundant, but I added it for clearity.
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
+The branch coverage went up from 0% -> 100%. Initially it did not have any coverage, since the test was not fired by an unknown reason. We have tried to figure out why this is, but it has to do with some flag that is not set(maybe this is because we set a seed to the randomness in the conftest.py). However, I read what the functions would do, what args it takes, and with all of that created different tests, so that the branch coverage could be improved to 100%.
 
 <Test 2>
 
