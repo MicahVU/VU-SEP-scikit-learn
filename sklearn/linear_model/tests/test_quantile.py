@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from pytest import approx
 from scipy.optimize import minimize
-
+from scipy import sparse  
 from sklearn.datasets import make_regression
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import HuberRegressor, QuantileRegressor
@@ -30,6 +30,41 @@ def X_y_data():
 @pytest.fixture
 def default_solver():
     return "highs" if sp_version >= parse_version("1.6.0") else "interior-point"
+
+
+def test_solver_does_not_support_sparse_input():
+    X = sparse.csc_matrix(np.random.randn(100, 2))
+    y = np.random.randn(100)
+
+    with pytest.raises(ValueError):
+        reg = QuantileRegressor(quantile=0.5, solver='revised simplex')
+        reg.fit(X, y)
+
+
+def test_zero_sample_weights():
+    X = np.random.randn(100, 2)
+    y = np.random.randn(100)
+    sample_weight = np.zeros(100)
+    sample_weight[0:50] = 1  
+
+    reg = QuantileRegressor(quantile=0.5, solver='revised simplex')
+    reg.fit(X, y, sample_weight=sample_weight)
+
+
+@pytest.mark.parametrize("solver", ["highs", "highs-ds", "highs-ipm", "revised simplex"])
+def test_all_solvers(X_y_data, solver):
+    X, y = X_y_data
+    reg = QuantileRegressor(solver=solver, fit_intercept=False)
+    reg.fit(X, y)
+    assert reg.coef_ is not None
+    assert reg.intercept_ is not None
+
+
+def test_error_interior_point_future():
+    """Test that an error is raised for interior-point solver in future SciPy versions."""
+    X, y = make_regression(n_samples=10, n_features=1, random_state=0, noise=1)
+    with pytest.raises(ValueError, match="Solver interior-point is not anymore available"):
+        QuantileRegressor(quantile=0.5, fit_intercept=False, solver='interior-point').fit(X, y)
 
 
 @pytest.mark.skipif(
