@@ -12,6 +12,8 @@ Programming language: Python(92,4%), Cython(5,6%), C++(1,1%), Meson(0,2%), Shell
 
 ## Coverage measurement
 
+For measuring the coverage and testing later, we chose to set a SEED for the random generator, so that the coverage would not be different everytime we run the tests. By setting the seed we could work and improve branch coverages.
+
 ### Existing tool
 
 <Inform the name of the existing tool that was executed and how it was executed>
@@ -97,6 +99,7 @@ https://github.com/MicahVU/VU-SEP-scikit-learn/commit/0853288f57f631c83d082cbe57
 ## Coverage improvement
 
 ### Individual tests
+Some tests are done on functions that are not called. This is due to a weird flag not set probably, resulting in branch coverage 0%. We tried to figure this out, but could not fix it, so we made our own test cases resulting in a big improvement of branch coverage. Other tests would run succesfully, and in this case we improved the branch coverage by adding or enhancing existing tests.
 
 <The following is supposed to be repeated for each group member>
 
@@ -193,7 +196,7 @@ https://github.com/MicahVU/VU-SEP-scikit-learn/commit/dd2976c00c728bdb80f7de9759
 The last picture might be redundant, but I added it for clearity.
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
-The branch coverage went up from 0% -> 100%. Initially it did not have any coverage, since the test was not fired by an unknown reason. We have tried to figure out why this is, but it has to do with some flag that is not set(maybe this is because we set a seed to the randomness in the conftest.py). However, I read what the functions would do, what args it takes, and with all of that created different tests, so that the branch coverage could be improved to 100%.
+The branch coverage went up from 0% -> 100%. Initially it did not have any coverage, since the test was not fired by an unknown reason. We have tried to figure out why this is, but it probably has to do with some flag that is not set(maybe this is because we set a seed to the randomness in the conftest.py). However, I read what the functions would do, what args it takes, and with all of that created different tests, so that the branch coverage could be improved to 100%.
 
 <Test 2>
 
