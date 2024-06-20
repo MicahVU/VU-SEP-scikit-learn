@@ -16,6 +16,34 @@ from ..utils.fixes import parse_version, sp_version
 from ..utils.validation import _check_sample_weight
 from ._base import LinearModel
 
+branch_coverage = {
+    "fit_intercept_adjustment": False, 
+    "check_solver_version": False,  
+    "use_specified_solver": False,  
+    "check_solver_availability": False,  
+    "handle_sparse": False,  
+    "set_default_solver_options": False,  
+    "use_provided_solver_options": False,  
+    "filter_zero_sample_weights": False,  
+    "do_not_penalize_intercept": False,  
+    "prepare_sparse": False,  
+    "include_intercept_in_sparse": False,  
+    "exclude_intercept_in_sparse": False,  
+    "prepare_dense_matrices": False,  
+    "include_intercept_in_dense": False,  
+    "exclude_intercept_in_dense": False, 
+    "handle_optimization_failure": False, 
+    "set_intercept_and_coef": False, 
+    "set_only_coef": False, 
+}
+
+def print_coverage():
+    for branch, hit in branch_coverage.items():
+        print(f"{branch} was {'hit' if hit else 'not hit'}")
+    total_branches = len(branch_coverage)
+    hit_branches = sum(branch_coverage.values())
+    coverage_percent = (hit_branches / total_branches) * 100
+    print(f"Branch coverage: {coverage_percent:.2f}%")
 
 class QuantileRegressor(LinearModel, RegressorMixin, BaseEstimator):
     """Linear regression model that predicts conditional quantiles.
@@ -173,6 +201,7 @@ class QuantileRegressor(LinearModel, RegressorMixin, BaseEstimator):
         n_params = n_features
 
         if self.fit_intercept:
+            branch_coverage["fit_intercept_adjustment"] = True
             n_params += 1
             # Note that centering y and X with _preprocess_data does not work
             # for quantile regression.
@@ -186,27 +215,33 @@ class QuantileRegressor(LinearModel, RegressorMixin, BaseEstimator):
             "highs-ipm",
             "highs",
         ) and sp_version < parse_version("1.6.0"):
+            branch_coverage["check_solver_version"] = True
             raise ValueError(
                 f"Solver {self.solver} is only available "
                 f"with scipy>=1.6.0, got {sp_version}"
             )
         else:
+            branch_coverage["use_specified_solver"] = True
             solver = self.solver
 
         if solver == "interior-point" and sp_version >= parse_version("1.11.0"):
+            branch_coverage["check_solver_availability"] = True
             raise ValueError(
                 f"Solver {solver} is not anymore available in SciPy >= 1.11.0."
             )
 
         if sparse.issparse(X) and solver not in ["highs", "highs-ds", "highs-ipm"]:
+            branch_coverage["handle_sparse"] = True
             raise ValueError(
                 f"Solver {self.solver} does not support sparse X. "
                 "Use solver 'highs' for example."
             )
         # make default solver more stable
         if self.solver_options is None and solver == "interior-point":
+            branch_coverage["set_default_solver_options"] = True
             solver_options = {"lstsq": True}
         else:
+            branch_coverage["use_provided_solver_options"] = True
             solver_options = self.solver_options
 
         # After rescaling alpha, the minimization problem is
@@ -232,6 +267,7 @@ class QuantileRegressor(LinearModel, RegressorMixin, BaseEstimator):
         indices = np.nonzero(sample_weight)[0]
         n_indices = len(indices)  # use n_mask instead of n_samples
         if n_indices < len(sample_weight):
+            branch_coverage["filter_zero_sample_weights"] = True
             sample_weight = sample_weight[indices]
             X = _safe_indexing(X, indices)
             y = _safe_indexing(y, indices)
@@ -243,27 +279,34 @@ class QuantileRegressor(LinearModel, RegressorMixin, BaseEstimator):
             ]
         )
         if self.fit_intercept:
+            branch_coverage["do_not_penalize_intercept"] = True
             # do not penalize the intercept
             c[0] = 0
             c[n_params] = 0
 
         if solver in ["highs", "highs-ds", "highs-ipm"]:
+            branch_coverage["prepare_sparse"] = True
             # Note that highs methods always use a sparse CSC memory layout internally,
             # even for optimization problems parametrized using dense numpy arrays.
             # Therefore, we work with CSC matrices as early as possible to limit
             # unnecessary repeated memory copies.
             eye = sparse.eye(n_indices, dtype=X.dtype, format="csc")
             if self.fit_intercept:
+                branch_coverage["include_intercept_in_sparse"] = True
                 ones = sparse.csc_matrix(np.ones(shape=(n_indices, 1), dtype=X.dtype))
                 A_eq = sparse.hstack([ones, X, -ones, -X, eye, -eye], format="csc")
             else:
+                branch_coverage["exclude_intercept_in_sparse"] = True
                 A_eq = sparse.hstack([X, -X, eye, -eye], format="csc")
         else:
+            branch_coverage["prepare_dense_matrices"] = True
             eye = np.eye(n_indices)
             if self.fit_intercept:
+                branch_coverage["include_intercept_in_dense"] = True
                 ones = np.ones((n_indices, 1))
                 A_eq = np.concatenate([ones, X, -ones, -X, eye, -eye], axis=1)
             else:
+                branch_coverage["exclude_intercept_in_dense"] = True
                 A_eq = np.concatenate([X, -X, eye, -eye], axis=1)
 
         b_eq = y
@@ -277,6 +320,7 @@ class QuantileRegressor(LinearModel, RegressorMixin, BaseEstimator):
         )
         solution = result.x
         if not result.success:
+            branch_coverage["handle_optimization_failure"] = True
             failure = {
                 1: "Iteration limit reached.",
                 2: "Problem appears to be infeasible.",
@@ -300,9 +344,12 @@ class QuantileRegressor(LinearModel, RegressorMixin, BaseEstimator):
         self.n_iter_ = result.nit
 
         if self.fit_intercept:
+            branch_coverage["set_intercept_and_coef"] = True
             self.coef_ = params[1:]
             self.intercept_ = params[0]
         else:
+            branch_coverage["set_only_coef"] = True
             self.coef_ = params
             self.intercept_ = 0.0
+        print_coverage()
         return self
