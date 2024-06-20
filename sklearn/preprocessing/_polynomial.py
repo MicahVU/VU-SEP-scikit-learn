@@ -35,6 +35,30 @@ __all__ = [
 ]
 
 
+branch_coverage = {
+    "example_function_1": False,  
+    "example_function_2": False,  
+    "example_function_3": False,  
+    "example_function_4": False,  
+    "example_function_5": False,  
+    "example_function_6": False,  
+    "example_function_7": False,  
+    "example_function_8": False,  
+    "example_function_9": False,  
+    "example_function_10": False,  
+    "example_function_11": False, 
+    "example_function_12": False, 
+    "example_function_13": False,
+}
+
+def print_coverage():
+    for branch, hit in branch_coverage.items():
+        print(f"{branch} was {'hit' if hit else 'not hit'}")
+    total_branches = len(branch_coverage)
+    hit_branches = sum(branch_coverage.values())
+    coverage_percent = (hit_branches / total_branches) * 100
+    print(f"Branch coverage: {coverage_percent:.2f}%")
+
 def _create_expansion(X, interaction_only, deg, n_features, cumulative_size=0):
     """Helper function for creating and appending sparse expansion matrices"""
 
@@ -838,24 +862,31 @@ class SplineTransformer(TransformerMixin, BaseEstimator):
             ensure_2d=True,
         )
         if sample_weight is not None:
+            branch_coverage["check_sample_weight"] = True
             sample_weight = _check_sample_weight(sample_weight, X, dtype=X.dtype)
 
         _, n_features = X.shape
 
         if isinstance(self.knots, str):
+            branch_coverage["get_base_knot_positions_str"] = True
             base_knots = self._get_base_knot_positions(
                 X, n_knots=self.n_knots, knots=self.knots, sample_weight=sample_weight
             )
         else:
+            branch_coverage["get_base_knot_positions_array"] = True
             base_knots = check_array(self.knots, dtype=np.float64)
             if base_knots.shape[0] < 2:
+                branch_coverage["validate_knot_number"] = True
                 raise ValueError("Number of knots, knots.shape[0], must be >= 2.")
             elif base_knots.shape[1] != n_features:
+                branch_coverage["validate_knot_shape"] = True
                 raise ValueError("knots.shape[1] == n_features is violated.")
             elif not np.all(np.diff(base_knots, axis=0) > 0):
+                branch_coverage["validate_knot_duplicates"] = True
                 raise ValueError("knots must be sorted without duplicates.")
 
         if self.sparse_output and sp_version < parse_version("1.8.0"):
+            branch_coverage["check_scipy_version"] = True
             raise ValueError(
                 "Option sparse_output=True is only available with scipy>=1.8.0, "
                 f"but here scipy=={sp_version} is used."
@@ -865,6 +896,7 @@ class SplineTransformer(TransformerMixin, BaseEstimator):
         n_knots = base_knots.shape[0]
 
         if self.extrapolation == "periodic" and n_knots <= self.degree:
+            branch_coverage["validate_periodic_splines"] = True
             raise ValueError(
                 "Periodic splines require degree < n_knots. Got n_knots="
                 f"{n_knots} and degree={self.degree}."
@@ -872,8 +904,10 @@ class SplineTransformer(TransformerMixin, BaseEstimator):
 
         # number of splines basis functions
         if self.extrapolation != "periodic":
+            branch_coverage["calculate_non_periodic_splines"] = True
             n_splines = n_knots + self.degree - 1
         else:
+            branch_coverage["calculate_periodic_splines"] = True
             # periodic splines have self.degree less degrees of freedom
             n_splines = n_knots - 1
 
@@ -882,6 +916,7 @@ class SplineTransformer(TransformerMixin, BaseEstimator):
         # We have to add degree number of knots below, and degree number knots
         # above the base knots in order to make the spline basis complete.
         if self.extrapolation == "periodic":
+            branch_coverage["construct_periodic_knots"] = True
             # For periodic splines the spacing of the first / last degree knots
             # needs to be a continuation of the spacing of the last / first
             # base knots.
@@ -893,6 +928,7 @@ class SplineTransformer(TransformerMixin, BaseEstimator):
             ]
 
         else:
+            branch_coverage["construct_non_periodic_knots"] = True
             # Eilers & Marx in "Flexible smoothing with B-splines and
             # penalties" https://doi.org/10.1214/ss/1038425655 advice
             # against repeating first and last knot several times, which
@@ -927,6 +963,7 @@ class SplineTransformer(TransformerMixin, BaseEstimator):
         # Note, BSpline appreciates C-contiguous float64 arrays as c=coef.
         coef = np.eye(n_splines, dtype=np.float64)
         if self.extrapolation == "periodic":
+            branch_coverage["construct_periodic_coefficients"] = True
             coef = np.concatenate((coef, coef[:degree, :]))
 
         extrapolate = self.extrapolation in ["periodic", "continue"]
@@ -940,6 +977,7 @@ class SplineTransformer(TransformerMixin, BaseEstimator):
         self.bsplines_ = bsplines
 
         self.n_features_out_ = n_out - n_features * (1 - self.include_bias)
+        print_coverage()
         return self
 
     def transform(self, X):
