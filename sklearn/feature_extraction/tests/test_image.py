@@ -13,6 +13,7 @@ from sklearn.feature_extraction.image import (
     grid_to_graph,
     img_to_graph,
     reconstruct_from_patches_2d,
+    _compute_n_patches,
 )
 
 
@@ -353,3 +354,32 @@ def test_patch_extractor_wrong_input(orange_face):
     extractor = PatchExtractor(patch_size=(8, 8, 8))
     with pytest.raises(ValueError, match=err_msg):
         extractor.transform(faces)
+
+
+def test_compute_n_patches_int_max_patches_less_than_all_patches():
+    i_h, i_w = 64, 64
+    p_h, p_w = 16, 16
+    assert _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=50) == 50
+
+def test_compute_n_patches_int_max_patches_greater_than_or_equal_to_all_patches():
+    i_h, i_w = 64, 64
+    p_h, p_w = 16, 16
+    all_patches = (i_h - p_h + 1) * (i_w - p_w + 1) # Copied from the _compute_n_patches function in order to calculate max_patches
+    assert _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=all_patches) == all_patches   # Equal to..
+    assert _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=all_patches + 1) == all_patches   # Greater than..
+
+def test_compute_n_patches_float_max_patches_between_0_and_1():
+    i_h, i_w = 64, 64
+    p_h, p_w = 16, 16
+    assert _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=0.5) == 1200
+
+def test_compute_n_patches_none():  # If no max_patches is given
+    i_h, i_w = 64, 64
+    p_h, p_w = 16, 16
+    _compute_n_patches(i_h, i_w, p_h, p_w) == 49
+
+def test_compute_n_patches_float_max_patches_bigger_than_1():
+    i_h, i_w = 64, 64
+    p_h, p_w = 16, 16
+    with pytest.raises(ValueError):
+        _compute_n_patches(i_h, i_w, p_h, p_w, max_patches=1.5)
