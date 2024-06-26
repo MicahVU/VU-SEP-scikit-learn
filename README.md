@@ -190,7 +190,7 @@ https://github.com/MicahVU/VU-SEP-scikit-learn/commit/08b1a00dc915197ba8af79421d
 
 
 <Provide a screenshot of the new coverage results>
-<img src="assignment1_images/quantile after(83.33).png">
+<img src="assignment1_images/quantile_after.png">
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
 The coverage is improved from 50% to 83.33%. To do so I had to look into the code and deteremine which branches are not covered and why, after analysis I was able to create 4 additional tests which made four more branches getting hit, improving coverage. Initially there was only 50% coverage so I wanted to increase it to at least 80%, now most of the branches which were not reached before are now coveredso that's a success.
