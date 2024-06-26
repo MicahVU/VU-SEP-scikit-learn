@@ -74,7 +74,7 @@ def fit(self, X, y, sample_weight=None) [in _quantile.py]
 https://github.com/MicahVU/VU-SEP-scikit-learn/commit/d7808859e292fd478ff90eab0a80b41925d21dc0
 
 <Provide a screenshot of the coverage results output by the instrumentation>
-<img src="assignment1_images/quantile before(50).png">
+<img src="assignment1_images/quantile_before.png">
 
 <Function 2 name>
 def fit(self, X, y=None, sample_weight=None) [in _polynomial.py]
@@ -84,7 +84,7 @@ def fit(self, X, y=None, sample_weight=None) [in _polynomial.py]
 https://github.com/MicahVU/VU-SEP-scikit-learn/commit/d64512c0831ed41b495706469d71045eaf14abc8
 
 <Provide a screenshot of the coverage results output by the instrumentation>
-<img src="assignment1_images/polynomial before(76.92).png">
+<img src="assignment1_images/polynomial_before.png">
 
 <Team member 4: Micah Rouwendaal>
 
@@ -183,31 +183,30 @@ it lacked data, it heavily got increased by patch decorators in unit tests. Like
 <Test 1>
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
-https://github.com/MicahVU/VU-SEP-scikit-learn/commit/45b6cc9d3af7e981f458b5f0600eba8db305112a
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/08b1a00dc915197ba8af79421db194343ba29181
 
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
-<img src="assignment1_images/quantile before(50).png">
+<img src="assignment1_images/quantile_before.png">
 
 <Provide a screenshot of the new coverage results>
 <img src="assignment1_images/quantile after(83.33).png">
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
-The coverage is improved from 50% to 83.33%, thus it clearly is an improvement. Most of the branches which were not reached before are now covered.
+The coverage is improved from 50% to 83.33%. To do so I had to look into the code and dteremine which branches are not covered and why, after analysis I was able to create 4 additional tests which make four banches more getting hit, improving coverage. Initially there was only 50% coverage and I wanted to increase it to at least 80%. Most of the branches which were not reached before are now coveredso that's a success.
 
 <Test 2>
 
 <Provide the same kind of information provided for Test 1>
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
-https://github.com/MicahVU/VU-SEP-scikit-learn/commit/94008110d4cb0ecb9a19d3be1e885f0ff13d4d1b
-
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/a8248ed2d3ede5fa5e0bf5ce42e9758cb4f317f2
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
-<img src="assignment1_images/polynomial before(76.92).png">
+<img src="assignment1_images/polynomial_before.png">
 
 <Provide a screenshot of the new coverage results>
-<img src="assignment1_images/polynomial after(92.31).png">
+<img src="assignment1_images/polynomial_after.png">
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
-The coverage is improved from 76.92% to 92.31%, thus it clearly is an improvement. Most of the branches which were not reached before are now covered.
+The coverage got improved from 76.92% to 92.31%. Original coverage was already pretty high so it was pretty though but I managed to add 2 more tests which checks functionalitites which original test file just wasn't checking. I managed to do so by studying how those functions are supposed to perform, what precisely they do, what are the arguments taken by it. This approach allowed me to create tests which finally made initially uncovered branches get hit.
 
 
 <Team member 4: Micah Rouwendaal>
@@ -259,6 +258,9 @@ Created the repository, started the project off. Looked for functions to improve
 
 Yevgeniy Stadnyk, studentnumber: 2727171
 Finding out how to configure the branch coverage fwith the existing tool. Finding functions to improve. Measured branch coverage with own tool, for 2 functions strip_newsgroup_footer and fetch_20newsgroups. Improved the branch coverage of these functions.
+
+Mikolaj Magiera, studentnumber: 2782981
+Measured the branch coverage of the entire codebase using an existing tool. Looked for functions where improvement is possible. Evaluated the coverage of specific functions with a self-developed tool. Enhanced selected functions' branch coverage by creating new tests.
 
 Stefanos Poullos, studentnumber: 2756510
 Measured the branch coverage of everything with an existing tool, measure coverage of functions that I worked on with my own tool and improved those functions
