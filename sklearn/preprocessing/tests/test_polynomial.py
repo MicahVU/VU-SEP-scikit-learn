@@ -31,7 +31,24 @@ from sklearn.utils.fixes import (
 )
 
 
+def test_spline_transformer_with_sample_weight():
+    """Test that the fit function handles sample_weight correctly."""
+    X = np.array([[1, 2], [3, 4]])
+    sample_weight = np.array([1, 1])
+    transformer = SplineTransformer(knots="uniform", degree=3)
+    transformer.fit(X, sample_weight=sample_weight)
+    assert isinstance(transformer.bsplines_, list)
 
+
+def test_spline_transformer_periodic_extrapolation_error():
+    """Test that an error is raised when extrapolation='periodic' and n_knots <= degree."""
+    X = np.array([[1, 2], [3, 4]])
+    transformer = SplineTransformer(knots=[[0, 0], [1, 1]], degree=3, extrapolation="periodic")
+    try:
+        transformer.fit(X)
+        assert False, "Expected ValueError was not raised"
+    except ValueError as e:
+        assert "Periodic splines require degree < n_knots. Got n_knots=2 and degree=3." in str(e)
 
 
 @pytest.mark.parametrize("est", (PolynomialFeatures, SplineTransformer))
