@@ -35,10 +35,13 @@ def default_solver():
 def test_solver_does_not_support_sparse_input():
     X = sparse.csc_matrix(np.random.randn(100, 2))
     y = np.random.randn(100)
-
-    with pytest.raises(ValueError):
-        reg = QuantileRegressor(quantile=0.5, solver='revised simplex')
+    
+    reg = QuantileRegressor(quantile=0.5, solver='revised simplex')
+    try:
         reg.fit(X, y)
+        assert False, "Expected ValueError was not raised"
+    except ValueError as e:
+        assert str(e) != ""
 
 
 def test_zero_sample_weights():
@@ -49,6 +52,10 @@ def test_zero_sample_weights():
 
     reg = QuantileRegressor(quantile=0.5, solver='revised simplex')
     reg.fit(X, y, sample_weight=sample_weight)
+    assert reg.coef_ is not None
+    assert isinstance(reg.coef_, np.ndarray)
+    assert reg.intercept_ is not None
+    assert isinstance(reg.intercept_, float)
 
 
 @pytest.mark.parametrize("solver", ["highs", "highs-ds", "highs-ipm", "revised simplex"])
@@ -57,14 +64,21 @@ def test_all_solvers(X_y_data, solver):
     reg = QuantileRegressor(solver=solver, fit_intercept=False)
     reg.fit(X, y)
     assert reg.coef_ is not None
+    assert isinstance(reg.coef_, np.ndarray)
     assert reg.intercept_ is not None
+    assert isinstance(reg.intercept_, float)
 
 
 def test_error_interior_point_future():
     """Test that an error is raised for interior-point solver in future SciPy versions."""
     X, y = make_regression(n_samples=10, n_features=1, random_state=0, noise=1)
-    with pytest.raises(ValueError, match="Solver interior-point is not anymore available"):
-        QuantileRegressor(quantile=0.5, fit_intercept=False, solver='interior-point').fit(X, y)
+    
+    reg = QuantileRegressor(quantile=0.5, fit_intercept=False, solver='interior-point')
+    try:
+        reg.fit(X, y)
+        assert False, "Expected ValueError was not raised"
+    except ValueError as e:
+        assert "Solver interior-point is not anymore available" in str(e)
 
 
 @pytest.mark.skipif(
