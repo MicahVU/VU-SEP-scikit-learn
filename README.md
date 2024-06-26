@@ -188,11 +188,12 @@ https://github.com/MicahVU/VU-SEP-scikit-learn/commit/08b1a00dc915197ba8af79421d
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
 <img src="assignment1_images/quantile_before.png">
 
+
 <Provide a screenshot of the new coverage results>
 <img src="assignment1_images/quantile after(83.33).png">
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
-The coverage is improved from 50% to 83.33%. To do so I had to look into the code and dteremine which branches are not covered and why, after analysis I was able to create 4 additional tests which make four banches more getting hit, improving coverage. Initially there was only 50% coverage and I wanted to increase it to at least 80%. Most of the branches which were not reached before are now coveredso that's a success.
+The coverage is improved from 50% to 83.33%. To do so I had to look into the code and deteremine which branches are not covered and why, after analysis I was able to create 4 additional tests which made four more branches getting hit, improving coverage. Initially there was only 50% coverage so I wanted to increase it to at least 80%, now most of the branches which were not reached before are now coveredso that's a success.
 
 <Test 2>
 
@@ -202,11 +203,12 @@ https://github.com/MicahVU/VU-SEP-scikit-learn/commit/a8248ed2d3ede5fa5e0bf5ce42
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
 <img src="assignment1_images/polynomial_before.png">
 
+
 <Provide a screenshot of the new coverage results>
 <img src="assignment1_images/polynomial_after.png">
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
-The coverage got improved from 76.92% to 92.31%. Original coverage was already pretty high so it was pretty though but I managed to add 2 more tests which checks functionalitites which original test file just wasn't checking. I managed to do so by studying how those functions are supposed to perform, what precisely they do, what are the arguments taken by it. This approach allowed me to create tests which finally made initially uncovered branches get hit.
+The coverage got improved from 76.92% to 92.31%. Original coverage was already pretty high so it was pretty though to improve it anywhere but fortunatelly I managed to add 2 more tests which checks functionalitites not taken into account by the original test file. I managed to do so by studying how those functions are supposed to perform, what precisely they do, what are the arguments taken by it. This allowed me to create tests which finally made initially uncovered branches get hit.
 
 
 <Team member 4: Micah Rouwendaal>
