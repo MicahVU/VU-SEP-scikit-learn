@@ -21,7 +21,7 @@ Python, coverage.py (pytest)
 
 <Show the coverage results provided by the existing tool with a screenshot>
 Since our file is so big and the amount of tests would result in a really big screenshot, we decided to add the html coverage file, so it would be easy to read from.
-click <a href="coverage_reports/htmlcov/index.html"> this link </a> to get to the html file
+click <a href="https://htmlpreview.github.io/?https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_reports/htmlcov_old/index.html"> this link </a> to get to the html file
 
 ### Your own coverage tool
 
@@ -253,12 +253,12 @@ For this function I needed to figure out what the if branches meant and what the
 <Provide a screenshot of the old coverage results by running an existing tool (the same as you already showed above)>
 
 Since our file is so big and the amount of tests would result in a really big screenshot, we decided to add the old html coverage file, so it would be easy to read from.
-click <a href="coverage_reports/htmlcov/index.html"> this link </a> to get to the html file
+click <a href="https://htmlpreview.github.io/?https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_reports/htmlcov_old/index.html"> this link </a> to get to the html file
 
 <Provide a screenshot of the new coverage results by running the existing tool using all test modifications made by the group>
 
 Since our file is so big and the amount of tests would result in a really big screenshot, we decided to add the new html coverage file, so it would be easy to read from.
-click <a href="coverage_reports/htmlcov_old/index.html"> this link </a> to get to the html file
+click <a href="https://htmlpreview.github.io/?https://github.com/MicahVU/VU-SEP-scikit-learn/blob/main/coverage_reports/htmlcov/index.html"> this link </a> to get to the html file
 
 ## Statement of individual contributions
 
