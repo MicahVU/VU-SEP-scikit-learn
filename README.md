@@ -185,14 +185,14 @@ it lacked data, it heavily got increased by patch decorators in unit tests. Like
 <Test 1>
 
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
-https://github.com/MicahVU/VU-SEP-scikit-learn/commit/08b1a00dc915197ba8af79421db194343ba29181
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/ea7f1f2377083d3f65b42bb32b0a8c77a3a1a0ed
 
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
-<img src="assignment1_images/quantile_before.png">
+<img src="assignment1_images/quantile1_before.png">
 
 
 <Provide a screenshot of the new coverage results>
-<img src="assignment1_images/quantile_after.png">
+<img src="assignment1_images/quantile1_after.png">
 
 <State the coverage improvement with a number and elaborate on why the coverage is improved>
 The coverage is improved from 50% to 83.33%. To do so I had to look into the code and deteremine which branches are not covered and why, after analysis I was able to create 4 additional tests which made four more branches getting hit, improving coverage. Initially there was only 50% coverage so I wanted to increase it to at least 80%, now most of the branches which were not reached before are now coveredso that's a success.
@@ -201,7 +201,7 @@ The coverage is improved from 50% to 83.33%. To do so I had to look into the cod
 
 <Provide the same kind of information provided for Test 1>
 <Show a patch (diff) or a link to a commit made in your forked repository that shows the new/enhanced test>
-https://github.com/MicahVU/VU-SEP-scikit-learn/commit/a8248ed2d3ede5fa5e0bf5ce42e9758cb4f317f2
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/2c6487576329220332f023c7b37334ab5389c0be
 <Provide a screenshot of the old coverage results (the same as you already showed above)>
 <img src="assignment1_images/polynomial_before.png">
 
