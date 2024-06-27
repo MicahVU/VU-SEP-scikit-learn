@@ -32,6 +32,47 @@ def default_solver():
     return "highs" if sp_version >= parse_version("1.6.0") else "interior-point"
 
 
+def test_unsupported_sparse_solver_error():
+    X = sparse.csc_matrix(np.random.randn(100, 2))
+    y = np.random.randn(100)
+    unsupported_solver = 'revised simplex'
+    reg = QuantileRegressor(quantile=0.5, solver=unsupported_solver)
+
+    with pytest.raises(ValueError, match=f"Solver {unsupported_solver} does not support sparse X. Use solver 'highs' for example."):
+        reg.fit(X, y)
+
+
+def test_correct_datatype_zero_sample_weights():
+    X = np.random.randn(100, 2)
+    y = np.random.randn(100)
+    sample_weight = np.zeros(100)
+    sample_weight[0:50] = 1
+    reg = QuantileRegressor(quantile=0.5, solver='revised simplex')
+    reg.fit(X, y, sample_weight=sample_weight)
+
+    assert isinstance(reg.coef_, np.ndarray)
+    assert isinstance(reg.intercept_, float)
+
+
+@pytest.mark.parametrize("solver", ["highs", "highs-ds", "highs-ipm", "revised simplex"])
+def test_correct_datatypes_all_solvers(X_y_data, solver):
+    X, y = X_y_data
+    reg = QuantileRegressor(solver=solver, fit_intercept=False)
+    reg.fit(X, y)
+
+    assert isinstance(reg.coef_, np.ndarray)
+    assert isinstance(reg.intercept_, float)
+
+
+def test_interior_point_version_error(monkeypatch):
+    import sklearn.linear_model._quantile
+    with monkeypatch.context() as m:
+        m.setattr(sklearn.linear_model._quantile, "sp_version", parse_version("1.11.0"))
+    X, y = make_regression(n_samples=10, n_features=1, random_state=0, noise=1)
+    reg = QuantileRegressor(quantile=0.5, fit_intercept=False, solver='interior-point')
+    
+    with pytest.raises(ValueError, match="Solver interior-point is not anymore available in SciPy >= 1.11.0."):
+        reg.fit(X, y)
 
 
 @pytest.mark.skipif(
