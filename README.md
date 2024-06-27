@@ -76,17 +76,17 @@ def fit(self, X, y, sample_weight=None) [in _quantile.py]
 https://github.com/MicahVU/VU-SEP-scikit-learn/commit/d7808859e292fd478ff90eab0a80b41925d21dc0
 
 <Provide a screenshot of the coverage results output by the instrumentation>
-<img src="assignment1_images/quantile_before.png">
+<img src="assignment1_images/quantile1_before.png">
 
 <Function 2 name>
 def fit(self, X, y=None, sample_weight=None) [in _polynomial.py]
 
 <Provide the same kind of information provided for Function 1>
 <Link to commit made in forked repository that shows the instrumented code to gather coverage measurements>
-https://github.com/MicahVU/VU-SEP-scikit-learn/commit/d64512c0831ed41b495706469d71045eaf14abc8
+https://github.com/MicahVU/VU-SEP-scikit-learn/commit/13aea7d65c6d0acc1a5bf419d51a8e0b36f81514
 
 <Provide a screenshot of the coverage results output by the instrumentation>
-<img src="assignment1_images/polynomial_before.png">
+<img src="assignment1_images/poly1_before.png">
 
 <Team member 4: Micah Rouwendaal>
 
