@@ -35,22 +35,6 @@ __all__ = [
 ]
 
 
-branch_coverage = {
-    "example_function_1": False,
-    "example_function_2": False,
-    "example_function_3": False,
-    "example_function_4": False,
-    "example_function_5": False,
-    "example_function_6": False,
-    "example_function_7": False,
-    "example_function_8": False,
-    "example_function_9": False,
-    "example_function_10": False,
-    "example_function_11": False,
-    "example_function_12": False,
-    "example_function_13": False,
-}
-
 def print_coverage():
     for branch, hit in branch_coverage.items():
         print(f"{branch} was {'hit' if hit else 'not hit'}")
