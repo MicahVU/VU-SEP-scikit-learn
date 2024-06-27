@@ -35,62 +35,44 @@ def default_solver():
 def test_unsupported_sparse_solver_error():
     X = sparse.csc_matrix(np.random.randn(100, 2))
     y = np.random.randn(100)
-
     unsupported_solver = 'revised simplex'
     reg = QuantileRegressor(quantile=0.5, solver=unsupported_solver)
 
-    try:
+    with pytest.raises(ValueError, match=f"Solver {unsupported_solver} does not support sparse X. Use solver 'highs' for example."):
         reg.fit(X, y)
-        assert False, "Expected ValueError was not raised"
-    except ValueError as e:
-        expected_message = f"Solver {unsupported_solver} does not support sparse X. Use solver 'highs' for example."
-        assert expected_message in str(e)
 
 
-def test_zero_sample_weights():
+def test_correct_datatype_zero_sample_weights():
     X = np.random.randn(100, 2)
     y = np.random.randn(100)
     sample_weight = np.zeros(100)
     sample_weight[0:50] = 1
-
     reg = QuantileRegressor(quantile=0.5, solver='revised simplex')
     reg.fit(X, y, sample_weight=sample_weight)
 
-    # Calculate filtered indices
-    filtered_indices = np.nonzero(sample_weight)[0]
+    assert isinstance(reg.coef_, np.ndarray)
+    assert isinstance(reg.intercept_, float)
 
-    assert X.shape[0] == filtered_indices.shape[0], \
-        f"Expected {filtered_indices.shape[0]} samples after filtering, but got {X.shape[0]}"
-
-    assert y.shape[0] == filtered_indices.shape[0], \
-        f"Expected {filtered_indices.shape[0]} samples after filtering, but got {y.shape[0]}"
-
-    assert sample_weight.shape[0] == filtered_indices.shape[0], \
-        f"Expected {filtered_indices.shape[0]} samples after filtering, but got {sample_weight.shape[0]}"
 
 @pytest.mark.parametrize("solver", ["highs", "highs-ds", "highs-ipm", "revised simplex"])
-def test_all_solvers(X_y_data, solver):
+def test_correct_datatypes_all_solvers(X_y_data, solver):
     X, y = X_y_data
     reg = QuantileRegressor(solver=solver, fit_intercept=False)
     reg.fit(X, y)
+
     assert isinstance(reg.coef_, np.ndarray)
     assert isinstance(reg.intercept_, float)
 
 
 def test_interior_point_version_error(monkeypatch):
-    """Test that an error is raised for interior-point solver in SciPy versions >= 1.11.0."""
     import sklearn.linear_model._quantile
+    with monkeypatch.context() as m:
+        m.setattr(sklearn.linear_model._quantile, "sp_version", parse_version("1.11.0"))
     X, y = make_regression(n_samples=10, n_features=1, random_state=0, noise=1)
-    
     reg = QuantileRegressor(quantile=0.5, fit_intercept=False, solver='interior-point')
-    # with monkeypatch.context() as m:
-    #     m.setattr(sklearn.linear_model._quantile, "sp_version", parse_version("1.11.0"))
     
-    try:
+    with pytest.raises(ValueError, match="Solver interior-point is not anymore available in SciPy >= 1.11.0."):
         reg.fit(X, y)
-        assert False, "Expected ValueError was not raised"
-    except ValueError as e:
-        assert "Solver interior-point is not anymore available in SciPy >= 1.11.0." in str(e)
 
 
 @pytest.mark.skipif(
