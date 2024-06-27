@@ -377,7 +377,7 @@ def _extract_patches(arr, patch_shape=8, extraction_step=1):
     strides = tuple(list(indexing_strides) + list(patch_strides))
 
     patches = as_strided(arr, shape=shape, strides=strides)
-    print_coverage()
+    #print_coverage()
     return patches
 
 

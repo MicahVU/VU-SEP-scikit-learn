@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 
 from sklearn.datasets._kddcup99 import (
     fetch_kddcup99,
-    print_coverage,
+    #print_coverage,
 )
 
 @pytest.mark.parametrize("as_frame", [True, False])
@@ -31,7 +31,7 @@ def test_fetch_kddcup99_percent10(subset, n_samples, n_features, as_frame):
 def test_fetch_kddcup99_return_X_y():
     fetch_func = partial(fetch_kddcup99, subset="smtp")
     data, target = fetch_func(return_X_y=True)
-    assert data.shape[1] == 3  
+    assert data.shape[1] == 3
     assert target.shape[0] == data.shape[0]
 
 def test_fetch_kddcup99_as_frame():
@@ -59,10 +59,10 @@ def test_fetch_kddcup99_shuffle():
 
 
 def test_fetch_kddcup99_download_if_missing():
-    #cover the case where dataset is not available locally 
+    #cover the case where dataset is not available locally
 
-    #patch so we can simulate their behavior in a controlled env 
-    #functions work correctly without the need for network calls 
+    #patch so we can simulate their behavior in a controlled env
+    #functions work correctly without the need for network calls
 
     with patch("sklearn.datasets._kddcup99.exists", return_value=False), \
          patch("sklearn.datasets._kddcup99._fetch_remote"), \
@@ -72,7 +72,7 @@ def test_fetch_kddcup99_download_if_missing():
          patch("sklearn.datasets._kddcup99.os.makedirs"), \
          patch("sklearn.datasets._kddcup99.join", return_value="/tmp/scikit_learn_data/kddcup99_10-py3/kddcup99_10_data"), \
          patch("builtins.open", new_callable=MagicMock):
-        
+
         #mock  data to be returned by GzipFile
         mock_gzipfile.return_value.__enter__.return_value.readlines.return_value = [
             b"0,tcp,http,SF,181,5450,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,511,511,0.00,0.00,0.00,0.00,0.00,0.00,0,0,1.00,0.00,0.00,0.00,0.00,0.00,normal.\n"
@@ -91,7 +91,7 @@ def test_pandas_dependency_message():
 
 def test_corrupted_file_error_message(tmp_path):
     """Check that a nice error message is raised when cache is corrupted."""
-    kddcup99_dir = tmp_path / "kddcup99_10-py3" 
+    kddcup99_dir = tmp_path / "kddcup99_10-py3"
     #create a temporary directory to simulate the cache location and put corrupted data to it
     kddcup99_dir.mkdir()
     samples_path = kddcup99_dir / "samples"
@@ -107,6 +107,6 @@ def test_corrupted_file_error_message(tmp_path):
     with pytest.raises(OSError, match=msg):
         fetch_kddcup99(data_home=str(tmp_path))
 
-if __name__ == "__main__":
-    pytest.main()
-    print_coverage()
+# if __name__ == "__main__":
+#     pytest.main()
+#     print_coverage()

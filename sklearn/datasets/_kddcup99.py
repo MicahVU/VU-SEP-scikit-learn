@@ -317,5 +317,5 @@ def print_coverage():
         print(f"{branch} was {'hit' if hit else 'not hit'}")
 
 
-if __name__ == "__main__":
-    print_coverage()
+# if __name__ == "__main__":
+#     print_coverage()

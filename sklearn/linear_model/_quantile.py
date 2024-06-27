@@ -17,24 +17,24 @@ from ..utils.validation import _check_sample_weight
 from ._base import LinearModel
 
 branch_coverage = {
-    "fit_intercept_adjustment": False, 
-    "check_solver_version": False,  
-    "use_specified_solver": False,  
-    "check_solver_availability": False,  
-    "handle_sparse": False,  
-    "set_default_solver_options": False,  
-    "use_provided_solver_options": False,  
-    "filter_zero_sample_weights": False,  
-    "do_not_penalize_intercept": False,  
-    "prepare_sparse": False,  
-    "include_intercept_in_sparse": False,  
-    "exclude_intercept_in_sparse": False,  
-    "prepare_dense_matrices": False,  
-    "include_intercept_in_dense": False,  
-    "exclude_intercept_in_dense": False, 
-    "handle_optimization_failure": False, 
-    "set_intercept_and_coef": False, 
-    "set_only_coef": False, 
+    "fit_intercept_adjustment": False,
+    "check_solver_version": False,
+    "use_specified_solver": False,
+    "check_solver_availability": False,
+    "handle_sparse": False,
+    "set_default_solver_options": False,
+    "use_provided_solver_options": False,
+    "filter_zero_sample_weights": False,
+    "do_not_penalize_intercept": False,
+    "prepare_sparse": False,
+    "include_intercept_in_sparse": False,
+    "exclude_intercept_in_sparse": False,
+    "prepare_dense_matrices": False,
+    "include_intercept_in_dense": False,
+    "exclude_intercept_in_dense": False,
+    "handle_optimization_failure": False,
+    "set_intercept_and_coef": False,
+    "set_only_coef": False,
 }
 
 def print_coverage():
@@ -351,5 +351,5 @@ class QuantileRegressor(LinearModel, RegressorMixin, BaseEstimator):
             branch_coverage["set_only_coef"] = True
             self.coef_ = params
             self.intercept_ = 0.0
-        print_coverage()
+        #print_coverage()
         return self
